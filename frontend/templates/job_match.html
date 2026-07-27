@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Job Description Compatibility Analyzer - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="jobmatch-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-file-contract text-primary"></i> Job Description Compatibility Analyzer</h1>
+            <p>Paste any target job description text to parse required skills, tools, and match score % against your candidate profile.</p>
+        </div>
+
+        <div class="jobmatch-grid">
+            
+            <!-- Input Form Card -->
+            <div class="job-input-card">
+                <h3>Paste Target Job Description</h3>
+                <form method="POST" action="{{ url_for('career.analyze_job') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <div class="form-group">
+                        <textarea name="job_description" rows="12" class="form-control" placeholder="Paste the job description (responsibilities, required skills, tools, qualifications)..." required>{{ job_text if job_text else '' }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Analyze Job Compatibility
+                    </button>
+                </form>
+            </div>
+
+            <!-- Analysis Output Card -->
+            <div class="job-result-card">
+                <h3>Job Match Analysis Result</h3>
+                
+                {% if result %}
+                    <div class="score-gauge-box">
+                        <span class="gauge-label">Job Compatibility Match Score</span>
+                        <div class="large-score-val" style="color: {% if result.match_score >= 80 %}#10b981{% elif result.match_score >= 60 %}#f59e0b{% else %}#ef4444{% endif %};">
+                            {{ result.match_score }}<span class="denom">%</span>
+                        </div>
+                    </div>
+
+                    <div class="skills-match-box mt-3">
+                        <h4 class="text-success"><i class="fa-solid fa-check"></i> Matched Job Skills ({{ result.matched_skills | length }})</h4>
+                        <div class="tag-cloud mb-3">
+                            {% for m in result.matched_skills %}
+                                <span class="tag tag-success">{{ m }}</span>
+                            {% else %}
+                                <span class="tag tag-muted">None Matched</span>
+                            {% endfor %}
+                        </div>
+
+                        <h4 class="text-warning"><i class="fa-solid fa-xmark"></i> Missing Job Keywords ({{ result.missing_skills | length }})</h4>
+                        <div class="tag-cloud">
+                            {% for ms in result.missing_skills %}
+                                <span class="tag tag-warning">{{ ms }}</span>
+                            {% else %}
+                                <span class="tag tag-success">100% Keywords Matched!</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="placeholder-box text-center p-4">
+                        <i class="fa-solid fa-file-circle-check text-muted" style="font-size: 3rem;"></i>
+                        <p class="mt-2 text-muted">Paste a job description on the left to see instant skill matching and compatibility analytics.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}

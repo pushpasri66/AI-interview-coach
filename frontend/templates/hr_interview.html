@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}HR & Behavioral Interview - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="config-section">
+    <div class="section-container">
+        <div class="config-card">
+            <div class="config-header">
+                <i class="fa-solid fa-comments config-icon text-purple"></i>
+                <h2>HR & Behavioral Mock Interview</h2>
+                <p>Configure your difficulty level and launch an interactive session.</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('interview.generate') }}" class="config-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="interview_type" value="hr">
+
+                <div class="form-group">
+                    <label for="difficulty" class="form-label">Select Difficulty Level</label>
+                    <select name="difficulty" id="difficulty" class="form-control">
+                        <option value="easy">Easy (Entry Level / Fresh Graduate)</option>
+                        <option value="medium" selected>Medium (Standard Mid-Level)</option>
+                        <option value="hard">Hard (Senior / Lead Position)</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">
+                        <i class="fa-solid fa-play"></i> Start HR Interview Session
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

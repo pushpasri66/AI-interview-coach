@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Skill Gap Analysis - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="skillgap-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-list-check text-primary"></i> Skill Gap Analyzer for <span class="highlight-name">{{ target_role }}</span></h1>
+            <p>Compare your current skill matrix against industry job requirements to detect missing technical competencies.</p>
+        </div>
+
+        <div class="gap-overview-card">
+            <div class="overview-meta">
+                <div class="meta-item">
+                    <span>Skill Coverage Match</span>
+                    <strong class="text-primary">{{ gaps.coverage_percentage }}%</strong>
+                </div>
+                <div class="meta-item">
+                    <span>Missing Skills Count</span>
+                    <strong class="text-warning">{{ gaps.missing_skills | length }} Skills</strong>
+                </div>
+                <div class="meta-item">
+                    <span>Learning Priority Level</span>
+                    <strong class="{% if gaps.priority == 'High' %}text-danger{% elif gaps.priority == 'Medium' %}text-warning{% else %}text-success{% endif %}">
+                        {{ gaps.priority }} Priority
+                    </strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="skills-gap-grid mt-4">
+            
+            <!-- Available Skills Card -->
+            <div class="gap-card card-available">
+                <h3><i class="fa-solid fa-circle-check text-emerald"></i> Available Skills ({{ gaps.available_skills | length }})</h3>
+                <div class="gap-skills-list">
+                    {% for s in gaps.available_skills %}
+                        <div class="skill-pill pill-success">
+                            <i class="fa-solid fa-check"></i> {{ s }}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No skills matched yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Missing Skills Card -->
+            <div class="gap-card card-missing">
+                <h3><i class="fa-solid fa-circle-xmark text-rose"></i> Missing Skills to Acquire ({{ gaps.missing_skills | length }})</h3>
+                <div class="gap-skills-list">
+                    {% for m in gaps.missing_skills %}
+                        <div class="skill-pill pill-danger">
+                            <i class="fa-solid fa-xmark"></i> {{ m }}
+                        </div>
+                    {% else %}
+                        <p class="text-success">You possess 100% of the required skills for this role!</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('career.roadmap', role=target_role) }}" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-route"></i> Generate 4-Month Learning Roadmap
+            </a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

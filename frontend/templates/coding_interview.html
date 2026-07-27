@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Live Coding Interview - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="config-section">
+    <div class="section-container">
+        <div class="config-card">
+            <div class="config-header">
+                <i class="fa-solid fa-code config-icon text-emerald"></i>
+                <h2>Live Coding Challenge Interview</h2>
+                <p>Solve algorithm challenges in an online Python execution environment.</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('interview.generate') }}" class="config-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="interview_type" value="coding">
+
+                <div class="form-group">
+                    <label for="difficulty" class="form-label">Coding Difficulty</label>
+                    <select name="difficulty" id="difficulty" class="form-control">
+                        <option value="easy">Easy (Arrays & Strings)</option>
+                        <option value="medium" selected>Medium (Trees, HashMaps, Kadane)</option>
+                        <option value="hard">Hard (Dynamic Programming & Graphs)</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">
+                        <i class="fa-solid fa-play"></i> Launch Coding Environment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}403 Forbidden - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="error-section">
+    <div class="section-container text-center">
+        <div class="error-card">
+            <h1 class="error-code text-warning">403</h1>
+            <h2>Access Forbidden</h2>
+            <p>You do not have administrative permission or security clearance to access this page.</p>
+            <div class="mt-4">
+                <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-house"></i> Return to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

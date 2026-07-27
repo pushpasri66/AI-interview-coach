@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Interview Session Report - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="result-section">
+    <div class="section-container">
+        
+        <!-- Header Banner -->
+        <div class="result-header-card">
+            <div class="header-left">
+                <span class="badge badge-primary">{{ interview.interview_type.upper() }} INTERVIEW REPORT</span>
+                <h1>Performance Evaluation Summary</h1>
+                <p class="text-secondary">Session ID: <strong>#{{ interview.id }}</strong> | Completed: <strong>{{ interview.completed_at.strftime('%b %d, %Y %H:%M') if interview.completed_at else 'Just now' }}</strong></p>
+            </div>
+            <div class="header-right">
+                <a href="{{ url_for('interview.download_report', interview_id=interview.id) }}" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-file-pdf"></i> Download PDF Report
+                </a>
+            </div>
+        </div>
+
+        <!-- Score Banner & Overview -->
+        <div class="result-score-grid">
+            <div class="overall-score-card">
+                <h3>Overall Performance Score</h3>
+                <div class="large-score-display" style="color: {% if interview.score >= 80 %}#10b981{% elif interview.score >= 60 %}#f59e0b{% else %}#ef4444{% endif %};">
+                    {{ interview.score }}<span class="score-denominator">/100</span>
+                </div>
+                <div class="grade-pill">
+                    {% if interview.score >= 80 %}
+                        <i class="fa-solid fa-award text-success"></i> Performance: Outstanding
+                    {% elif interview.score >= 60 %}
+                        <i class="fa-solid fa-circle-check text-warning"></i> Performance: Proficient
+                    {% else %}
+                        <i class="fa-solid fa-triangle-exclamation text-danger"></i> Performance: Needs Practice
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="session-meta-card">
+                <h3>Session Details</h3>
+                <div class="meta-grid">
+                    <div class="meta-box">
+                        <span class="meta-label">Interview Mode</span>
+                        <strong class="meta-val">{{ interview.interview_type.title() }}</strong>
+                    </div>
+                    {% if interview.company_name %}
+                        <div class="meta-box">
+                            <span class="meta-label">Target Company</span>
+                            <strong class="meta-val">{{ interview.company_name }}</strong>
+                        </div>
+                    {% endif %}
+                    <div class="meta-box">
+                        <span class="meta-label">Difficulty</span>
+                        <strong class="meta-val">{{ interview.difficulty.title() }}</strong>
+                    </div>
+                    <div class="meta-box">
+                        <span class="meta-label">Questions Evaluated</span>
+                        <strong class="meta-val">{{ answers_map | length }} / {{ questions | length }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question-by-Question Evaluation Breakdown -->
+        <div class="questions-breakdown-card">
+            <h2><i class="fa-solid fa-list-check text-primary"></i> Detailed Question Evaluation Breakdown</h2>
+
+            <div class="questions-list">
+                {% for q in questions %}
+                    {% set ans = answers_map.get(q.id) %}
+                    <div class="question-result-item">
+                        <div class="q-header">
+                            <div class="q-title-group">
+                                <span class="q-number">Q{{ loop.index }}</span>
+                                <span class="badge badge-outline">{{ q.category or 'General' }}</span>
+                                <h3>{{ q.question_text }}</h3>
+                            </div>
+                            <div class="q-score-badge {% if ans and ans.answer_score >= 80 %}score-high{% elif ans and ans.answer_score >= 60 %}score-mid{% else %}score-low{% endif %}">
+                                Score: {{ ans.answer_score if ans else 0 }}/100
+                            </div>
+                        </div>
+
+                        <div class="q-body">
+                            {% if ans %}
+                                <div class="user-response-box">
+                                    <strong>Your Submitted Answer:</strong>
+                                    <p>{{ ans.user_answer }}</p>
+                                </div>
+
+                                <div class="eval-metrics-row">
+                                    <div class="metric-pill">
+                                        <span>Technical Depth:</span> <strong>{{ ans.technical_score }}%</strong>
+                                    </div>
+                                    <div class="metric-pill">
+                                        <span>Relevance:</span> <strong>{{ ans.relevance_score }}%</strong>
+                                    </div>
+                                    <div class="metric-pill">
+                                        <span>Communication:</span> <strong>{{ ans.communication_score }}%</strong>
+                                    </div>
+                                </div>
+
+                                <div class="feedback-notes-grid">
+                                    <div class="note-box">
+                                        <h4 class="text-primary"><i class="fa-solid fa-comment-dots"></i> AI Feedback</h4>
+                                        <p>{{ ans.feedback }}</p>
+                                    </div>
+                                    <div class="note-box">
+                                        <h4 class="text-success"><i class="fa-solid fa-check-double"></i> Strengths</h4>
+                                        <p>{{ ans.strengths }}</p>
+                                    </div>
+                                    <div class="note-box">
+                                        <h4 class="text-warning"><i class="fa-solid fa-arrow-up-right-dots"></i> Improvements</h4>
+                                        <p>{{ ans.improvements }}</p>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="user-response-box text-muted">
+                                    <em>Question was not answered during the session.</em>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Result Action Bar -->
+        <div class="result-actions-bar">
+            <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-outline btn-lg">
+                <i class="fa-solid fa-gauge"></i> Return to Dashboard
+            </a>
+            <a href="{{ url_for('interview.select') }}" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-rotate-right"></i> Start Another Mock Interview
+            </a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

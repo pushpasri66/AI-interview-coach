@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Target Company Interview - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="config-section">
+    <div class="section-container">
+        <div class="config-card">
+            <div class="config-header">
+                <i class="fa-solid fa-building config-icon text-amber"></i>
+                <h2>Target Company Mock Interview</h2>
+                <p>Simulate interview rounds tailored to top tech companies.</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('interview.generate') }}" class="config-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="interview_type" value="company">
+
+                <div class="form-group">
+                    <label for="company_name" class="form-label">Select Target Tech Company</label>
+                    <select name="company_name" id="company_name" class="form-control" required>
+                        <option value="Google">Google (System Design & Algorithmic Rigor)</option>
+                        <option value="Amazon">Amazon (Leadership Principles & Distributed Systems)</option>
+                        <option value="Microsoft">Microsoft (Azure Cloud & Object-Oriented Architecture)</option>
+                        <option value="TCS">TCS (Software Engineering & Client Deliverables)</option>
+                        <option value="Infosys">Infosys (Technical & Logical Problem Solving)</option>
+                        <option value="Wipro">Wipro (Domain Knowledge & Systems)</option>
+                        <option value="Accenture">Accenture (Technology Consulting & Solution Architecture)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="difficulty" class="form-label">Difficulty Level</label>
+                    <select name="difficulty" id="difficulty" class="form-control">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">
+                        <i class="fa-solid fa-play"></i> Start Company Interview
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

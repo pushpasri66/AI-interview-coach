@@ -1,0 +1,194 @@
+/* ==========================================
+   DASHBOARD STYLING
+   ========================================== */
+
+.dashboard-section {
+    padding: 2.5rem 1.5rem 4rem;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Welcome Header Banner */
+.welcome-card {
+    background: linear-gradient(135deg, #1e1b4b 0%, #1e293b 100%);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.25rem 2.5rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background: radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.welcome-content {
+    max-width: 650px;
+    z-index: 1;
+}
+
+.badge-primary {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    color: #818cf8;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.welcome-title {
+    font-size: 2.1rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.highlight-name {
+    color: #a5b4fc;
+}
+
+.welcome-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+}
+
+.welcome-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    z-index: 1;
+    text-align: right;
+}
+
+.meta-item {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.meta-item span {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Dashboard Grid Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.75rem;
+}
+
+/* Module Cards */
+.dashboard-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-purple:hover { border-color: var(--accent-purple); }
+.card-blue:hover { border-color: var(--accent-blue); }
+.card-emerald:hover { border-color: var(--accent-emerald); }
+.card-amber:hover { border-color: var(--accent-amber); }
+.card-rose:hover { border-color: var(--accent-rose); }
+.card-indigo:hover { border-color: var(--primary-color); }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.bg-icon-purple { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+.bg-icon-blue { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+.bg-icon-emerald { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
+.bg-icon-amber { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+.bg-icon-rose { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); }
+.bg-icon-indigo { background: rgba(99, 102, 241, 0.15); color: var(--primary-color); }
+
+.card-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+}
+
+.status-ready { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+.status-info { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+.status-active { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+
+.card-body h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.card-body p {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    margin-bottom: 1.5rem;
+
+.card-footer {
+    margin-top: auto;
+}
+
+.btn-card {
+    width: 100%;
+    background: #0f172a;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+}
+
+.btn-card:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #ffffff;
+}

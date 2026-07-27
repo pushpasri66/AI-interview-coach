@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - AI Interview Coach{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="dashboard-container">
+        
+        <!-- Welcome Header Banner with Start Mock Interview CTA -->
+        <div class="welcome-card">
+            <div class="welcome-content">
+                <span class="badge badge-primary">Candidate Workspace</span>
+                <h1 class="welcome-title">Welcome back, <span class="highlight-name">{{ current_user.fullname }}</span>! 👋</h1>
+                <p class="welcome-subtitle">Practice AI-driven mock interviews, analyze technical responses, and boost your hiring confidence.</p>
+                <div class="mt-3">
+                    <a href="{{ url_for('interview.select') }}" class="btn btn-primary btn-lg">
+                        <i class="fa-solid fa-headset"></i> Start Mock Interview Now
+                    </a>
+                </div>
+            </div>
+            <div class="welcome-meta">
+                <div class="meta-item">
+                    <i class="fa-solid fa-calendar"></i> Member Since: <span>{{ current_user.created_at.strftime('%b %Y') if current_user.created_at else 'Jul 2026' }}</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fa-solid fa-clock"></i> Last Login: <span>{{ current_user.last_login.strftime('%b %d, %H:%M') if current_user.last_login else 'Just now' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personal AI Coach & Readiness Card -->
+        <div class="dashboard-coach-grid mt-4">
+            
+            <!-- Daily Improvement Plan Card -->
+            <div class="coach-card card-purple">
+                <div class="coach-header">
+                    <h3><i class="fa-solid fa-wand-magic-sparkles text-primary"></i> Personal AI Coach Improvement Plan</h3>
+                    <span class="badge badge-primary">Daily Plan Active</span>
+                </div>
+                <ul class="coach-tasks-list">
+                    <li><i class="fa-solid fa-square-check text-emerald"></i> Practice SQL joins & subquery optimization algorithms.</li>
+                    <li><i class="fa-solid fa-square-check text-blue"></i> Improve speaking cadence to 140 words/min.</li>
+                    <li><i class="fa-solid fa-circle-play text-warning"></i> Complete 1 AI Mock Technical Session today.</li>
+                </ul>
+            </div>
+
+            <!-- Live Interview Readiness Card -->
+            <div class="coach-card card-emerald text-center">
+                <h3><i class="fa-solid fa-circle-radial text-emerald"></i> Interview Readiness</h3>
+                <div class="readiness-gauge-val text-emerald">89%</div>
+                <span class="badge badge-outline">Role: AI Engineer</span>
+                <p class="mt-2 text-secondary">High readiness level detected across technical depth and communication clarity.</p>
+            </div>
+
+        </div>
+
+        <!-- AI Performance Analysis Summary Section -->
+        <div class="ai-performance-summary-card mt-4">
+            <div class="perf-header">
+                <h3><i class="fa-solid fa-brain text-primary"></i> AI Performance & Communication Analytics</h3>
+                <a href="{{ url_for('analytics.dashboard') }}" class="badge badge-outline">View Full Analytics Dashboard <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="perf-stats-grid">
+                <div class="perf-stat-box">
+                    <span class="stat-label">Confidence Score</span>
+                    <span class="stat-value text-emerald">84%</span>
+                </div>
+                <div class="perf-stat-box">
+                    <span class="stat-label">Communication Score</span>
+                    <span class="stat-value text-primary">86/100</span>
+                </div>
+                <div class="perf-stat-box">
+                    <span class="stat-label">Eye Contact Engagement</span>
+                    <span class="stat-value text-indigo">90%</span>
+                </div>
+                <div class="perf-stat-box">
+                    <span class="stat-label">Voice Quality Score</span>
+                    <span class="stat-value text-amber">82/100</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Feature Cards Grid (PHASE 1 - PHASE 8 MODULES) -->
+        <div class="dashboard-grid mt-4">
+            
+            <!-- HR Interview Card -->
+            <div class="dashboard-card card-purple">
+                <div class="card-header">
+                    <div class="card-icon bg-icon-purple"><i class="fa-solid fa-comments"></i></div>
+                    <span class="card-status status-ready">Active</span>
+                </div>
+                <div class="card-body">
+                    <h3>HR & Behavioral Interview</h3>
+                    <p>Practice behavioral, leadership, and STAR technique questions with real-time AI scoring.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('interview.hr') }}" class="btn btn-card">Start HR Session <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Technical Interview Card -->
+            <div class="dashboard-card card-blue">
+                <div class="card-header">
+                    <div class="card-icon bg-icon-blue"><i class="fa-solid fa-laptop-code"></i></div>
+                    <span class="card-status status-ready">Active</span>
+                </div>
+                <div class="card-body">
+                    <h3>Technical Domain Interview</h3>
+                    <p>Mock technical interviews in Python, Java, AI/ML, Data Structures, DBMS, SQL, Networks, and OS.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('interview.technical') }}" class="btn btn-card">Start Technical Session <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Coding Interview Card -->
+            <div class="dashboard-card card-emerald">
+                <div class="card-header">
+                    <div class="card-icon bg-icon-emerald"><i class="fa-solid fa-code"></i></div>
+                    <span class="card-status status-ready">Active</span>
+                </div>
+                <div class="card-body">
+                    <h3>Live Coding Challenge</h3>
+                    <p>Solve algorithm challenges in an online Python code editor with test execution & evaluation.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('interview.coding') }}" class="btn btn-card">Start Coding Challenge <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Target Company Interview Card -->
+            <div class="dashboard-card card-amber">
+                <div class="card-header">
+                    <div class="card-icon bg-icon-amber"><i class="fa-solid fa-building"></i></div>
+                    <span class="card-status status-ready">Active</span>
+                </div>
+                <div class="card-body">
+                    <h3>Target Company Interview</h3>
+                    <p>Simulate interview questions tailored to Google, Microsoft, Amazon, TCS, Infosys, Wipro, and Accenture.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('interview.company') }}" class="btn btn-card">Start Company Interview <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Resume Analyzer & ATS Engine Card -->
+            <div class="dashboard-card card-rose">
+                <div class="card-header">
+                    <div class="card-icon bg-icon-rose"><i class="fa-solid fa-file-invoice"></i></div>
+                    <span class="card-status status-ready">Active</span>
+                </div>
+                <div class="card-body">
+                    <h3>Resume Analyzer & ATS Engine</h3>
+                    <p>Upload PDF/DOCX resumes to compute your 100-point ATS score, skill gaps, and downloadable reports.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('resume.upload') }}" class="btn btn-card">Upload & Analyze Resume <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Mock Group Discussion Platform Card (PHASE 8) -->
+            <div class="dashboard-card card-indigo">
+                <div class="card-header">
+                    <div class="card-icon bg-icon-indigo"><i class="fa-solid fa-users"></i></div>
+                    <span class="card-status status-ready">Phase 8</span>
+                </div>
+                <div class="card-body">
+                    <h3>AI Mock Group Discussion</h3>
+                    <p>Participate in simulated corporate group discussions with an AI Moderator and virtual candidates.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('group_discussion.index') }}" class="btn btn-card">Start Discussion <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

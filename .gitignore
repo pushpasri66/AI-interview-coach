@@ -1,0 +1,30 @@
+# Python / Virtual Environment
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+
+# Database
+database/*.db
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# Uploads & Reports
+uploads/resumes/*
+uploads/interview_audio/*
+uploads/interview_video/*
+uploads/profile_images/*
+reports/certificates/*
+reports/feedback_reports/*
+reports/interview_reports/*
+
+# IDEs & System
+.vscode/
+.idea/
+.DS_Store

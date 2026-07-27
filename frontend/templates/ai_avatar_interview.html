@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}AI Avatar Conversational Interview - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="avatar-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-robot text-primary"></i> Real-Time AI Avatar Interviewer Room</h1>
+            <p>Interactive conversational AI interviewer with speech synthesis, lip sync animation, and live video analysis.</p>
+        </div>
+
+        <div class="avatar-room-grid">
+            
+            <!-- AI Avatar Window & Candidate Video -->
+            <div class="media-column">
+                
+                <!-- AI Avatar Window -->
+                <div class="avatar-window-card">
+                    <div class="avatar-window-header">
+                        <span><i class="fa-solid fa-headset text-primary"></i> AI Interviewer Avatar (Alex)</span>
+                        <span class="badge badge-primary">Lip Sync Active</span>
+                    </div>
+
+                    <div class="avatar-viewport">
+                        <div class="avatar-head-graphic" id="avatarHeadGraphic">
+                            <div class="avatar-face">
+                                <div class="avatar-eyes">
+                                    <div class="eye left-eye"></div>
+                                    <div class="eye right-eye"></div>
+                                </div>
+                                <div class="avatar-mouth" id="avatarMouth"></div>
+                            </div>
+                        </div>
+                        <div class="speech-bubble" id="avatarSpeechBubble">
+                            "Hello {{ current_user.fullname }}! I am your AI interviewer. Let's begin our technical interview session."
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Candidate Camera Window -->
+                <div class="candidate-camera-card mt-3">
+                    <div class="cam-header">
+                        <span><i class="fa-solid fa-video text-rose"></i> Candidate Camera</span>
+                        <span class="badge badge-outline">Live Tracking</span>
+                    </div>
+                    <div class="cam-box">
+                        <video id="candidateVideo" autoplay playsinline muted class="cam-stream"></video>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Live Conversation Panel -->
+            <div class="conversation-column">
+                <div class="conversation-card">
+                    <h3><i class="fa-solid fa-comments text-purple"></i> Live Interview Transcript</h3>
+                    
+                    <div class="chat-history-box" id="chatHistoryBox">
+                        <div class="chat-msg msg-ai">
+                            <strong>AI Interviewer:</strong>
+                            <p>Tell me about yourself and summarize your professional background in software development.</p>
+                        </div>
+                    </div>
+
+                    <form id="avatarAnswerForm" class="mt-3">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="form-group">
+                            <textarea id="avatarAnswerInput" class="form-control" rows="3" placeholder="Type your response or speak into your microphone..."></textarea>
+                        </div>
+                        <div class="avatar-actions">
+                            <button type="button" class="btn btn-outline" id="btnAvatarMic">
+                                <i class="fa-solid fa-microphone text-rose"></i> Speak Answer
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="btnAvatarSend">
+                                <i class="fa-solid fa-paper-plane"></i> Send Response
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}

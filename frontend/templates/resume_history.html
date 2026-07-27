@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Resume History & ATS Comparison - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="history-section">
+    <div class="section-container">
+        
+        <div class="history-header-card">
+            <div class="header-content">
+                <h1>Resume Version History & ATS Comparison</h1>
+                <p>Track your ATS score progress across resume iterations and manage past uploads.</p>
+            </div>
+            <div class="header-action">
+                <a href="{{ url_for('resume.upload') }}" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload New Resume Version
+                </a>
+            </div>
+        </div>
+
+        <!-- ATS Progress Comparison Summary -->
+        <div class="comparison-summary-card">
+            <div class="summary-item">
+                <span class="summary-label">Total Resumes Uploaded</span>
+                <span class="summary-value">{{ data.total_resumes }}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Latest ATS Score</span>
+                <span class="summary-value text-primary">{{ data.latest_score }} / 100</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Score Difference</span>
+                <span class="summary-value {% if data.has_improved %}text-success{% else %}text-muted{% endif %}">
+                    {% if data.has_improved %}
+                        <i class="fa-solid fa-arrow-trend-up"></i> +{{ data.score_diff }} Pts Improvement
+                    {% elif data.score_diff < 0 %}
+                        <i class="fa-solid fa-arrow-trend-down"></i> {{ data.score_diff }} Pts
+                    {% else %}
+                        0 Pts Change
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <!-- Resumes History Table -->
+        <div class="history-table-card">
+            {% if data.history %}
+                <div class="table-responsive">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Format</th>
+                                <th>Size</th>
+                                <th>Upload Date</th>
+                                <th>ATS Score</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in data.history %}
+                                <tr>
+                                    <td class="file-name-cell">
+                                        <i class="fa-solid {% if item.file_type == 'PDF' %}fa-file-pdf text-rose{% else %}fa-file-word text-blue{% endif %}"></i>
+                                        <strong>{{ item.filename }}</strong>
+                                    </td>
+                                    <td><span class="badge badge-outline">{{ item.file_type }}</span></td>
+                                    <td>{{ item.file_size_kb }} KB</td>
+                                    <td>{{ item.upload_date }}</td>
+                                    <td>
+                                        <span class="ats-score-badge {% if item.ats_score >= 80 %}score-high{% elif item.ats_score >= 60 %}score-mid{% else %}score-low{% endif %}">
+                                            {{ item.ats_score }}%
+                                        </span>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <a href="{{ url_for('resume.analysis', resume_id=item.id) }}" class="btn btn-outline btn-sm" title="View Full Analysis">
+                                            <i class="fa-solid fa-chart-pie"></i> View Report
+                                        </a>
+                                        <a href="{{ url_for('resume.download_report', resume_id=item.id) }}" class="btn btn-outline btn-sm" title="Download PDF Report">
+                                            <i class="fa-solid fa-download"></i> PDF
+                                        </a>
+                                        <form method="POST" action="{{ url_for('resume.delete_resume', resume_id=item.id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this resume version?');">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                            <button type="submit" class="btn btn-danger-outline btn-sm" title="Delete Resume">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fa-solid fa-file-circle-question empty-icon"></i>
+                    <h3>No Resumes Uploaded Yet</h3>
+                    <p>Upload your first resume to generate an ATS score and track performance improvement.</p>
+                    <a href="{{ url_for('resume.upload') }}" class="btn btn-primary">Upload Resume Now</a>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account - AI Interview Coach{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Create Your Account</h2>
+                <p>Start practicing with AI Interview Coach today</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('auth.register') }}" class="auth-form" id="registerForm" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    <label for="fullname" class="form-label">
+                        <i class="fa-solid fa-user"></i> Full Name
+                    </label>
+                    {{ form.fullname(class="form-control" + (" is-invalid" if form.fullname.errors else ""), placeholder="John Doe", id="fullname") }}
+                    {% for error in form.fullname.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="fa-solid fa-envelope"></i> Email Address
+                    </label>
+                    {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="name@example.com", id="email") }}
+                    {% for error in form.email.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <i class="fa-solid fa-lock"></i> Password
+                    </label>
+                    <div class="password-wrapper">
+                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="At least 8 characters", id="password") }}
+                        <button type="button" class="btn-toggle-password" onclick="togglePasswordVisibility('password', this)" aria-label="Toggle password visibility">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    {% for error in form.password.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password" class="form-label">
+                        <i class="fa-solid fa-lock-keyhole"></i> Confirm Password
+                    </label>
+                    <div class="password-wrapper">
+                        {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else ""), placeholder="Re-enter password", id="confirm_password") }}
+                        <button type="button" class="btn-toggle-password" onclick="togglePasswordVisibility('confirm_password', this)" aria-label="Toggle password visibility">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    {% for error in form.confirm_password.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-submit">
+                    <button type="submit" class="btn btn-primary btn-block btn-submit" id="btnSubmit">
+                        <span class="btn-text"><i class="fa-solid fa-user-plus"></i> Create Account</span>
+                        <span class="btn-spinner hidden"><i class="fa-solid fa-circle-notch fa-spin"></i> Registering...</span>
+                    </button>
+                </div>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="{{ url_for('auth.login') }}" class="auth-link">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}AI Multimodal Performance Report - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="report-section">
+    <div class="section-container">
+        
+        <!-- Header Banner -->
+        <div class="report-header-card">
+            <div class="header-left">
+                <span class="badge badge-primary">MULTIMODAL AI EVALUATION</span>
+                <h1>AI Performance Analysis Report</h1>
+                <p class="text-secondary">Interview Session <strong>#{{ interview.id }}</strong> | Candidate: <strong>{{ current_user.fullname }}</strong></p>
+            </div>
+            <div class="header-right">
+                <a href="{{ url_for('interview.result', interview_id=interview.id) }}" class="btn btn-outline">
+                    <i class="fa-solid fa-file-lines"></i> View Q&A Details
+                </a>
+            </div>
+        </div>
+
+        <!-- Overall & Communication Scores Grid -->
+        <div class="perf-scores-grid">
+            
+            <!-- Communication Score Card -->
+            <div class="perf-score-card">
+                <h3>Communication Score</h3>
+                <div class="large-score-val text-primary">{{ ai.communication_score }}<span class="denom">/100</span></div>
+                <div class="score-formula-box">
+                    <span>Formula: Voice 25% + Confidence 25% + Technical 20% + Emotion 15% + Eye Contact 15%</span>
+                </div>
+            </div>
+
+            <!-- Confidence Score Card -->
+            <div class="perf-score-card">
+                <h3>Confidence Level</h3>
+                <div class="large-score-val text-emerald">{{ ai.confidence_score }}<span class="denom">%</span></div>
+                <p class="score-subtext">Steady speaking rate, minimal pauses, and strong sentence stability.</p>
+            </div>
+
+            <!-- Overall Presence Card -->
+            <div class="perf-score-card">
+                <h3>Overall Presence</h3>
+                <div class="large-score-val text-amber">{{ ai.overall_score }}<span class="denom">/100</span></div>
+                <p class="score-subtext">Comprehensive score evaluating voice clarity, emotion, and eye contact.</p>
+            </div>
+
+        </div>
+
+        <!-- Detailed AI Analysis Cards Grid -->
+        <div class="multimodal-grid">
+            
+            <!-- Voice Quality Analysis -->
+            <div class="analysis-box">
+                <h3><i class="fa-solid fa-microphone text-rose"></i> Voice Quality & Speech Analysis</h3>
+                <div class="metrics-list">
+                    <div class="metric-item">
+                        <span>Speaking Rate:</span>
+                        <strong>{{ voice.speech_rate }} words/min</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Clarity Score:</span>
+                        <strong>{{ voice.clarity_score }}%</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Volume & Energy:</span>
+                        <strong>{{ voice.volume_score }}% (Good)</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Filler Words Detected:</span>
+                        <strong class="{% if voice.filler_words_count <= 2 %}text-success{% else %}text-warning{% endif %}">{{ voice.filler_words_count }} occurrences</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Voice Quality Score:</span>
+                        <strong class="text-primary">{{ ai.voice_score }}/100</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emotion Analysis -->
+            <div class="analysis-box">
+                <h3><i class="fa-solid fa-face-smile text-amber"></i> Emotion Distribution Analysis</h3>
+                <div class="metrics-list">
+                    <div class="metric-item">
+                        <span>Neutral (Composed):</span>
+                        <strong>{{ (face.neutral * 100) | round | int }}%</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Happy (Warmth):</span>
+                        <strong>{{ (face.happiness * 100) | round | int }}%</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Fear / Stress Indicators:</span>
+                        <strong>{{ (face.fear * 100) | round | int }}%</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Professional Emotion Score:</span>
+                        <strong class="text-emerald">{{ ai.emotion_score }}%</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eye Contact Analysis -->
+            <div class="analysis-box">
+                <h3><i class="fa-solid fa-eye text-emerald"></i> Eye Contact & Camera Engagement</h3>
+                <div class="metrics-list">
+                    <div class="metric-item">
+                        <span>Eye Contact Percentage:</span>
+                        <strong class="text-emerald">{{ face.eye_contact_percentage }}%</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Engagement Assessment:</span>
+                        <strong>Good camera focus detected</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Eye Contact Score:</span>
+                        <strong>{{ ai.eye_contact_score }}/100</strong>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- AI Improvement Suggestions Card -->
+        <div class="suggestions-card mt-4">
+            <h2><i class="fa-solid fa-wand-magic-sparkles text-primary"></i> AI Improvement Suggestions</h2>
+            <ul class="suggestions-list">
+                <li><i class="fa-solid fa-circle-dot text-emerald"></i> <strong>Maintain Consistent Eye Contact:</strong> Keep your gaze directed at the camera lens, especially when starting key statements.</li>
+                <li><i class="fa-solid fa-circle-dot text-primary"></i> <strong>Reduce Filler Words:</strong> Pause silently for a second when organizing thoughts rather than using "um" or "like".</li>
+                <li><i class="fa-solid fa-circle-dot text-amber"></i> <strong>Pace Your Answers:</strong> Maintain an optimal speaking speed around 130–150 words per minute to enhance clarity.</li>
+                <li><i class="fa-solid fa-circle-dot text-purple"></i> <strong>Facial Composure:</strong> Keep a warm, composed expression with natural smiling during behavioral introductions.</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

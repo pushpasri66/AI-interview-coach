@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}AI Interview Room - AI Interview Coach{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/interview.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="room-section">
+    <div class="room-container">
+        
+        <!-- Header Bar: Mode Info, Timer & Avatar -->
+        <div class="room-header-card">
+            <div class="ai-avatar-group">
+                <div class="avatar-icon">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="avatar-info">
+                    <h3>AI Interviewer Avatar</h3>
+                    <span class="status-indicator"><span class="dot"></span> Active Session • {{ interview.interview_type.upper() }}</span>
+                </div>
+            </div>
+
+            <div class="room-timers">
+                <div class="timer-box" title="Question Countdown Timer">
+                    <i class="fa-solid fa-hourglass-half text-warning"></i>
+                    <span id="questionTimer">02:00</span>
+                </div>
+                <div class="timer-box" title="Total Session Duration">
+                    <i class="fa-solid fa-clock text-primary"></i>
+                    <span id="totalTimer">00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Counter Progress Bar -->
+        <div class="question-progress-bar">
+            <div class="progress-meta">
+                <span id="questionProgressText">Question 1 of {{ questions | length }}</span>
+                <span class="badge badge-outline">{{ interview.difficulty.title() }} Difficulty</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill" style="width: {{ (1 / (questions | length) * 100) | round }}%;"></div>
+            </div>
+        </div>
+
+        <!-- Main Interview Area Grid -->
+        <div class="room-grid">
+            
+            <!-- Question & Input Column -->
+            <div class="room-card question-input-card">
+                
+                <!-- Current Question Box -->
+                <div class="question-box">
+                    <span class="category-badge" id="questionCategoryBadge">{{ questions[0].category if questions else 'General' }}</span>
+                    <h2 class="question-text" id="questionTextDisplay">
+                        {{ questions[0].question_text if questions else 'Loading question...' }}
+                    </h2>
+                </div>
+
+                <!-- Input Area (Text, Voice Speech, or Code Execution) -->
+                <form id="answerForm" class="answer-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <input type="hidden" id="interviewId" value="{{ interview.id }}"/>
+                    <input type="hidden" id="currentQuestionId" value="{{ questions[0].id if questions else '' }}"/>
+                    <input type="hidden" id="currentQuestionIndex" value="0"/>
+                    <input type="hidden" id="totalQuestionsCount" value="{{ questions | length }}"/>
+
+                    {% if interview.interview_type == 'coding' %}
+                        <!-- Code Editor Container -->
+                        <div class="code-editor-wrapper">
+                            <div class="editor-header">
+                                <span><i class="fa-solid fa-code"></i> Python 3 Code Editor</span>
+                                <button type="button" class="btn btn-sm btn-outline" id="btnRunCode">
+                                    <i class="fa-solid fa-play text-success"></i> Run & Test Code
+                                </button>
+                            </div>
+                            <textarea id="userAnswerText" class="code-textarea" rows="10" placeholder="# Write your Python function solution here..."></textarea>
+                            <div class="code-output-box hidden" id="codeOutputBox">
+                                <pre id="codeOutputText">Code execution output will appear here...</pre>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- Standard Speech / Text Answer Input -->
+                        <div class="text-answer-wrapper">
+                            <div class="answer-header">
+                                <label for="userAnswerText" class="form-label">Your Response</label>
+                                <button type="button" class="btn btn-sm btn-outline btn-mic" id="btnMicRecord">
+                                    <i class="fa-solid fa-microphone text-rose" id="micIcon"></i> <span id="micText">Speak Answer</span>
+                                </button>
+                            </div>
+                            <textarea id="userAnswerText" class="form-control text-textarea" rows="6" placeholder="Type your response or click 'Speak Answer' to use speech-to-text voice recording..."></textarea>
+                        </div>
+                    {% endif %}
+
+                    <div class="room-action-buttons">
+                        <button type="submit" class="btn btn-primary btn-lg" id="btnSubmitAnswer">
+                            <span class="btn-text"><i class="fa-solid fa-paper-plane"></i> Submit Answer</span>
+                            <span class="btn-spinner hidden"><i class="fa-solid fa-circle-notch fa-spin"></i> Evaluating AI Feedback...</span>
+                        </button>
+                        <button type="button" class="btn btn-outline btn-lg hidden" id="btnNextQuestion">
+                            Next Question <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <a href="{{ url_for('interview.complete', interview_id=interview.id) }}" class="btn btn-warning btn-lg ml-auto" id="btnFinishInterview">
+                            <i class="fa-solid fa-flag-checkered"></i> Finish Interview
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+
+            <!-- Instant AI Evaluation Feedback Sidebar -->
+            <div class="room-card feedback-sidebar-card" id="aiFeedbackSidebar">
+                <h3><i class="fa-solid fa-sparkles text-primary"></i> Real-Time AI Feedback</h3>
+                
+                <div class="feedback-placeholder" id="feedbackPlaceholder">
+                    <i class="fa-solid fa-comments-question placeholder-icon"></i>
+                    <p>Submit your response to receive immediate AI scoring, technical depth evaluation, and communication feedback.</p>
+                </div>
+
+                <div class="feedback-live-content hidden" id="feedbackLiveContent">
+                    <div class="live-score-badge" id="liveScoreBadge">
+                        Overall Question Score: <span id="liveScoreValue">85</span>/100
+                    </div>
+
+                    <div class="subscores-list">
+                        <div class="subscore-item">
+                            <span>Technical Depth</span>
+                            <strong id="liveTechScore">80%</strong>
+                        </div>
+                        <div class="subscore-item">
+                            <span>Relevance</span>
+                            <strong id="liveRelevanceScore">90%</strong>
+                        </div>
+                        <div class="subscore-item">
+                            <span>Communication</span>
+                            <strong id="liveCommScore">85%</strong>
+                        </div>
+                    </div>
+
+                    <div class="live-feedback-box">
+                        <h4>AI Summary</h4>
+                        <p id="liveFeedbackText">Constructive feedback text...</p>
+                    </div>
+
+                    <div class="live-feedback-box">
+                        <h4 class="text-success"><i class="fa-solid fa-check"></i> Key Strengths</h4>
+                        <p id="liveStrengthsText">Strengths text...</p>
+                    </div>
+
+                    <div class="live-feedback-box">
+                        <h4 class="text-warning"><i class="fa-solid fa-arrow-up"></i> Improvement Focus</h4>
+                        <p id="liveImprovementsText">Improvements text...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- Pass JSON Data to Client JS -->
+<script>
+    window.INTERVIEW_DATA = {
+        interviewId: {{ interview.id }},
+        questions: [
+            {% for q in questions %}
+                {
+                    id: {{ q.id }},
+                    text: {{ q.question_text | tojson }},
+                    category: {{ (q.category or 'General') | tojson }},
+                    expected: {{ (q.expected_answer or '') | tojson }}
+                }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ]
+    };
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/speech.js') }}"></script>
+<script src="{{ url_for('static', filename='js/coding.js') }}"></script>
+<script src="{{ url_for('static', filename='js/interview.js') }}"></script>
+{% endblock %}

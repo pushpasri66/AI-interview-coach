@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Live AI Multimodal Analysis - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="analysis-live-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-eye text-primary"></i> Real-Time AI Camera & Voice Analysis</h1>
+            <p>Live computer vision and speech engine measuring confidence, emotion distribution, and eye contact engagement.</p>
+        </div>
+
+        <div class="live-analysis-grid">
+            
+            <!-- Webcam Preview & Controls -->
+            <div class="webcam-card">
+                <div class="webcam-header">
+                    <span><i class="fa-solid fa-video text-rose"></i> Live Camera Feed</span>
+                    <span class="badge badge-primary" id="cameraStatusBadge">Camera Ready</span>
+                </div>
+
+                <div class="webcam-preview-box">
+                    <video id="webcamVideo" autoplay playsinline muted class="webcam-stream"></video>
+                    <canvas id="webcamCanvas" class="hidden"></canvas>
+                    
+                    <div class="webcam-overlay" id="webcamOverlay">
+                        <i class="fa-solid fa-camera-web overlay-icon"></i>
+                        <p>Click "Start Camera" to enable real-time emotion & eye contact tracking.</p>
+                    </div>
+                </div>
+
+                <div class="webcam-controls">
+                    <button type="button" class="btn btn-primary" id="btnStartCamera">
+                        <i class="fa-solid fa-video"></i> Start Camera
+                    </button>
+                    <button type="button" class="btn btn-outline hidden" id="btnStopCamera">
+                        <i class="fa-solid fa-video-slash"></i> Stop Camera
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btnCaptureSnapshot" disabled>
+                        <i class="fa-solid fa-camera"></i> Analyze Snapshot Frame
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live AI Meters Column -->
+            <div class="live-meters-column">
+                
+                <!-- Confidence Meter -->
+                <div class="meter-card">
+                    <div class="meter-header">
+                        <span><i class="fa-solid fa-shield-halved text-primary"></i> Confidence Meter</span>
+                        <strong id="liveConfVal">84%</strong>
+                    </div>
+                    <div class="meter-bg">
+                        <div class="meter-fill bg-primary" id="liveConfFill" style="width: 84%;"></div>
+                    </div>
+                </div>
+
+                <!-- Eye Contact Meter -->
+                <div class="meter-card">
+                    <div class="meter-header">
+                        <span><i class="fa-solid fa-eye text-emerald"></i> Eye Contact Engagement</span>
+                        <strong id="liveEyeVal">90%</strong>
+                    </div>
+                    <div class="meter-bg">
+                        <div class="meter-fill bg-emerald" id="liveEyeFill" style="width: 90%;"></div>
+                    </div>
+                </div>
+
+                <!-- Live Emotion Distribution Card -->
+                <div class="meter-card emotion-breakdown-card">
+                    <h3><i class="fa-solid fa-face-smile text-amber"></i> Detected Emotion Breakdown</h3>
+                    
+                    <div class="emotion-bars-list">
+                        <div class="emotion-row">
+                            <span class="emo-label">Neutral</span>
+                            <div class="emo-bar-bg"><div class="emo-bar-fill" id="emoNeutralFill" style="width: 70%; background: #60a5fa;"></div></div>
+                            <span class="emo-pct" id="emoNeutralPct">70%</span>
+                        </div>
+                        <div class="emotion-row">
+                            <span class="emo-label">Happy</span>
+                            <div class="emo-bar-bg"><div class="emo-bar-fill" id="emoHappyFill" style="width: 25%; background: #34d399;"></div></div>
+                            <span class="emo-pct" id="emoHappyPct">25%</span>
+                        </div>
+                        <div class="emotion-row">
+                            <span class="emo-label">Fear</span>
+                            <div class="emo-bar-bg"><div class="emo-bar-fill" id="emoFearFill" style="width: 3%; background: #fb7185;"></div></div>
+                            <span class="emo-pct" id="emoFearPct">3%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('analysis.report', interview_id=interview.id) }}" class="btn btn-primary btn-block btn-lg">
+                        View Full Performance Report <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- Pass JSON Data to Client JS -->
+<script>
+    window.ANALYSIS_DATA = {
+        interviewId: {{ interview.id }}
+    };
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
+{% endblock %}

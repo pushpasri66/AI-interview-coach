@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Personalized Learning Roadmap - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="roadmap-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-route text-primary"></i> 4-Month AI Learning Roadmap: <span class="highlight-name">{{ plan.target_role }}</span></h1>
+            <p>Personalized step-by-step technical milestone roadmap designed to eliminate your skill gaps.</p>
+        </div>
+
+        <!-- Month Timeline Cards -->
+        <div class="timeline-container">
+            {% for month_key, month_data in plan.roadmap.items() %}
+                <div class="timeline-card">
+                    <div class="timeline-badge">{{ month_key }}</div>
+                    <div class="timeline-content">
+                        <h3>{{ month_data.title }}</h3>
+                        <div class="focus-tags mb-2">
+                            {% for f in month_data.focus %}
+                                <span class="tag tag-primary">{{ f }}</span>
+                            {% endfor %}
+                        </div>
+                        <p class="timeline-action"><i class="fa-solid fa-bullseye text-primary"></i> <strong>Milestone Goal:</strong> {{ month_data.action }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Recommended Courses Section -->
+        <div class="courses-card mt-4">
+            <h2><i class="fa-solid fa-graduation-cap text-purple"></i> Recommended Skill Courses</h2>
+            <div class="courses-grid">
+                {% for course in plan.suggested_courses %}
+                    <div class="course-item">
+                        <h4>{{ course.title }}</h4>
+                        <p class="course-meta">
+                            <span><i class="fa-solid fa-globe"></i> {{ course.platform }}</span> | 
+                            <span><i class="fa-solid fa-clock"></i> {{ course.duration }}</span>
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('interview.select') }}" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-headset"></i> Practice Mock Interview Now
+            </a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

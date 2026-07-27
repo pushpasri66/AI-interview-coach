@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Analysis & ATS Score - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="analysis-section">
+    <div class="section-container">
+        
+        <!-- Header Banner -->
+        <div class="analysis-header-card">
+            <div class="header-left">
+                <a href="{{ url_for('resume.upload') }}" class="btn btn-outline btn-sm mb-3">
+                    <i class="fa-solid fa-arrow-left"></i> Upload Another Resume
+                </a>
+                <h1>Resume Analysis Results</h1>
+                <p class="text-secondary">Candidate: <strong>{{ parsed.name }}</strong> | File: <strong>{{ resume.original_filename }}</strong></p>
+            </div>
+            <div class="header-right">
+                <a href="{{ url_for('resume.download_report', resume_id=resume.id) }}" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-file-pdf"></i> Download PDF Report
+                </a>
+            </div>
+        </div>
+
+        <!-- ATS Score Overview Row -->
+        <div class="score-overview-grid">
+            
+            <!-- Circular ATS Gauge Card -->
+            <div class="score-gauge-card">
+                <h3>Overall ATS Compatibility</h3>
+                <div class="circular-progress-wrapper">
+                    <div class="circular-progress" id="atsProgressCircle" data-score="{{ analysis.ats_score }}" data-color="{{ recommendations.color }}">
+                        <div class="inner-circle">
+                            <span class="score-value" id="atsScoreText">0</span>
+                            <span class="score-symbol">%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="score-status-badge" style="background-color: {{ recommendations.color }}20; color: {{ recommendations.color }}; border: 1px solid {{ recommendations.color }}40;">
+                    Grade: {{ recommendations.grade }}
+                </div>
+                <p class="score-explanation">{{ recommendations.explanation }}</p>
+            </div>
+
+            <!-- ATS Category Breakdown Scores -->
+            <div class="categories-card">
+                <h3>ATS Evaluation Breakdown</h3>
+                <div class="category-bars-list">
+                    {% for key, cat in recommendations.categories.items() %}
+                        {% set pct = (cat.score / cat.max * 100) | round | int %}
+                        <div class="category-item">
+                            <div class="category-meta">
+                                <span class="cat-label">{{ cat.label }}</span>
+                                <span class="cat-score">{{ cat.score }} / {{ cat.max }} ({{ pct }}%)</span>
+                            </div>
+                            <div class="cat-progress-bg">
+                                <div class="cat-progress-fill" style="width: {{ pct }}%; background-color: {% if pct >= 80 %}#10b981{% elif pct >= 60 %}#f59e0b{% else %}#ef4444{% endif %};"></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Parsed Contact & Extracted Skills Section -->
+        <div class="parsed-details-card">
+            <h3><i class="fa-solid fa-user-check text-primary"></i> Extracted Candidate Profile & Skills</h3>
+            
+            <!-- Contact Badge Pills -->
+            <div class="contact-pills-row">
+                <span class="pill"><i class="fa-solid fa-envelope"></i> {{ parsed.email }}</span>
+                <span class="pill"><i class="fa-solid fa-phone"></i> {{ parsed.phone }}</span>
+                {% if parsed.linkedin != 'Not Found' %}
+                    <a href="{{ parsed.linkedin }}" target="_blank" class="pill pill-link"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                {% endif %}
+                {% if parsed.github != 'Not Found' %}
+                    <a href="{{ parsed.github }}" target="_blank" class="pill pill-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                {% endif %}
+                {% if parsed.portfolio != 'Not Found' %}
+                    <a href="{{ parsed.portfolio }}" target="_blank" class="pill pill-link"><i class="fa-solid fa-globe"></i> Portfolio</a>
+                {% endif %}
+            </div>
+
+            <!-- Skills Tag Cloud -->
+            <div class="skills-cloud-group">
+                <div class="skills-group">
+                    <h4>Technical Skills ({{ parsed.technical_skills | length }})</h4>
+                    <div class="tag-cloud">
+                        {% for skill in parsed.technical_skills %}
+                            <span class="tag tag-purple">{{ skill }}</span>
+                        {% else %}
+                            <span class="text-muted">No technical skills detected</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="skills-group">
+                    <h4>Soft Skills ({{ parsed.soft_skills | length }})</h4>
+                    <div class="tag-cloud">
+                        {% for skill in parsed.soft_skills %}
+                            <span class="tag tag-emerald">{{ skill }}</span>
+                        {% else %}
+                            <span class="text-muted">No soft skills detected</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Columns (Strengths, Weaknesses, Suggestions) -->
+        <div class="feedback-grid">
+            
+            <!-- Strengths -->
+            <div class="feedback-card card-strengths">
+                <div class="feedback-title">
+                    <i class="fa-solid fa-circle-check text-success"></i> Strengths
+                </div>
+                <ul class="feedback-list">
+                    {% for item in strengths %}
+                        <li><i class="fa-solid fa-check"></i> {{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Weaknesses -->
+            <div class="feedback-card card-weaknesses">
+                <div class="feedback-title">
+                    <i class="fa-solid fa-triangle-exclamation text-danger"></i> Weaknesses
+                </div>
+                <ul class="feedback-list">
+                    {% for item in weaknesses %}
+                        <li><i class="fa-solid fa-xmark"></i> {{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Actionable Suggestions -->
+            <div class="feedback-card card-suggestions">
+                <div class="feedback-title">
+                    <i class="fa-solid fa-lightbulb text-warning"></i> Suggestions
+                </div>
+                <ul class="feedback-list">
+                    {% for item in suggestions %}
+                        <li><i class="fa-solid fa-arrow-right"></i> {{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- AI Recommendations & Courses Grid -->
+        <div class="recommendations-grid">
+            
+            <!-- Missing Skills & Trending Tech -->
+            <div class="rec-card">
+                <h3><i class="fa-solid fa-layer-group text-primary"></i> Skill Gap & Trending Tech</h3>
+                <div class="mb-3">
+                    <label class="form-label">Recommended Missing Skills for Tech Roles:</label>
+                    <div class="tag-cloud">
+                        {% for skill in recommendations.missing_skills %}
+                            <span class="tag tag-rose">+ {{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label">Trending High-Demand Technologies:</label>
+                    <div class="tag-cloud">
+                        {% for tech in recommendations.trending_technologies %}
+                            <span class="tag tag-blue">{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommended Learning Courses -->
+            <div class="rec-card">
+                <h3><i class="fa-solid fa-graduation-cap text-emerald"></i> Recommended Courses</h3>
+                <ul class="courses-list">
+                    {% for course in recommendations.recommended_courses %}
+                        <li class="course-item">
+                            <div class="course-info">
+                                <strong>{{ course.title }}</strong>
+                                <span class="course-provider">{{ course.provider }} • {{ course.level }}</span>
+                            </div>
+                            <i class="fa-solid fa-up-right-from-square"></i>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Interview Preparation Topics -->
+            <div class="rec-card">
+                <h3><i class="fa-solid fa-brain text-amber"></i> Target Interview Prep Topics</h3>
+                <ul class="prep-list">
+                    {% for topic in recommendations.interview_prep_topics %}
+                        <li><i class="fa-solid fa-circle-dot"></i> {{ topic }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="about-section">
+    <div class="section-container">
+        <div class="about-hero">
+            <h1>About <span class="gradient-text">AI Interview Coach</span></h1>
+            <p class="about-tagline">Empowering software engineers and candidates to excel in high-stakes job interviews.</p>
+        </div>
+
+        <div class="about-content-card">
+            <h2><i class="fa-solid fa-bullseye"></i> Our Mission</h2>
+            <p>
+                AI Interview Coach is an intelligent mock interview platform designed to simulate authentic technical, HR, and coding interview scenarios. Powered by advanced AI algorithms, our platform provides actionable feedback on communication clarity, facial expressions, emotion detection, code performance, and resume ATS alignment.
+            </p>
+        </div>
+
+        <div class="about-grid">
+            <div class="about-card">
+                <i class="fa-solid fa-shield-halved about-icon"></i>
+                <h3>Secure Authentication</h3>
+                <p>Built with Flask-Login, Werkzeug password hashing, and CSRF protection to keep user data private and protected.</p>
+            </div>
+            <div class="about-card">
+                <i class="fa-solid fa-microchip about-icon"></i>
+                <h3>AI Performance Analytics</h3>
+                <p>Deep-learning backed scoring models evaluate answers, tone, and technical correctness in real time.</p>
+            </div>
+            <div class="about-card">
+                <i class="fa-solid fa-chart-line about-icon"></i>
+                <h3>Continuous Improvement</h3>
+                <p>Track historical interview scores across sessions to identify growth areas and build candidate confidence.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

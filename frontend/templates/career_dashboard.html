@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}AI Career Recommendations - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="career-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-compass text-primary"></i> AI Career Recommendation Engine</h1>
+            <p>Predictive machine learning models matching your resume skills and interview performance to top software & AI job roles.</p>
+        </div>
+
+        <div class="career-cards-grid">
+            {% for rec in recommendations %}
+                <div class="career-card">
+                    <div class="career-header">
+                        <div class="role-title-group">
+                            <span class="badge badge-primary">Rank #{{ loop.index }}</span>
+                            <h2>{{ rec.role }}</h2>
+                        </div>
+                        <div class="match-badge {% if rec.match_percentage >= 80 %}match-high{% elif rec.match_percentage >= 65 %}match-mid{% else %}match-low{% endif %}">
+                            {{ rec.match_percentage }}% Match
+                        </div>
+                    </div>
+
+                    <p class="role-description">{{ rec.description }}</p>
+
+                    <div class="skills-breakdown-grid">
+                        <div class="skills-box">
+                            <h4 class="text-success"><i class="fa-solid fa-check"></i> Profile Strengths</h4>
+                            <div class="tag-cloud">
+                                {% for s in rec.strengths %}
+                                    <span class="tag tag-success">{{ s }}</span>
+                                {% else %}
+                                    <span class="tag tag-muted">Python</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="skills-box">
+                            <h4 class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> Skill Gaps to Learn</h4>
+                            <div class="tag-cloud">
+                                {% for m in rec.missing_skills %}
+                                    <span class="tag tag-warning">{{ m }}</span>
+                                {% else %}
+                                    <span class="tag tag-success">No Major Skill Gaps</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="career-actions">
+                        <a href="{{ url_for('career.skill_gap', role=rec.role) }}" class="btn btn-outline">
+                            <i class="fa-solid fa-list-check"></i> Analyze Skill Gap
+                        </a>
+                        <a href="{{ url_for('career.roadmap', role=rec.role) }}" class="btn btn-primary">
+                            <i class="fa-solid fa-route"></i> View Learning Roadmap
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+{% endblock %}

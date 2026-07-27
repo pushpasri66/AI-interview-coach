@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In - AI Interview Coach{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Welcome Back</h2>
+                <p>Log in to access your interview dashboard</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('auth.login') }}" class="auth-form" id="loginForm" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="fa-solid fa-envelope"></i> Email Address
+                    </label>
+                    {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="name@example.com", id="email") }}
+                    {% for error in form.email.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <i class="fa-solid fa-lock"></i> Password
+                    </label>
+                    <div class="password-wrapper">
+                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Enter your password", id="password") }}
+                        <button type="button" class="btn-toggle-password" onclick="togglePasswordVisibility('password', this)" aria-label="Toggle password visibility">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    {% for error in form.password.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-submit">
+                    <button type="submit" class="btn btn-primary btn-block btn-submit" id="btnSubmit">
+                        <span class="btn-text"><i class="fa-solid fa-right-to-bracket"></i> Sign In</span>
+                        <span class="btn-spinner hidden"><i class="fa-solid fa-circle-notch fa-spin"></i> Authenticating...</span>
+                    </button>
+                </div>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="{{ url_for('auth.register') }}" class="auth-link">Create Account</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

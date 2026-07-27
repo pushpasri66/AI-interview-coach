@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}AI Performance Analytics - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="analytics-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-chart-line text-primary"></i> AI Analytics & Performance Dashboard</h1>
+            <p>Track your score trends, technical domain growth, communication clarity, and unlocked achievements.</p>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card card-purple">
+                <span class="kpi-title">Average Interview Score</span>
+                <div class="kpi-value text-purple">{{ stats.avg_score }}<span class="kpi-denom">/100</span></div>
+                <span class="kpi-subtext"><i class="fa-solid fa-arrow-up text-success"></i> +{{ growth.growth_percentage }}% Growth</span>
+            </div>
+
+            <div class="kpi-card card-blue">
+                <span class="kpi-title">Completed Mock Interviews</span>
+                <div class="kpi-value text-blue">{{ stats.completed_sessions }}</div>
+                <span class="kpi-subtext">Total Sessions: {{ stats.total_sessions }}</span>
+            </div>
+
+            <div class="kpi-card card-emerald">
+                <span class="kpi-title">Confidence & Presence</span>
+                <div class="kpi-value text-emerald">{{ ai_metrics.latest_confidence }}%</div>
+                <span class="kpi-subtext">Optimal cadence detected</span>
+            </div>
+
+            <div class="kpi-card card-amber">
+                <span class="kpi-title">Communication Score</span>
+                <div class="kpi-value text-amber">{{ ai_metrics.latest_communication }}<span class="kpi-denom">/100</span></div>
+                <span class="kpi-subtext">Weighted Multimodal Evaluation</span>
+            </div>
+        </div>
+
+        <!-- Chart.js Visualization Grid -->
+        <div class="charts-grid mt-4">
+            
+            <!-- Line Chart: Score Growth Trend -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fa-solid fa-chart-line text-primary"></i> Performance Progress Over Time</h3>
+                </div>
+                <div class="chart-body">
+                    <canvas id="progressLineChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Radar Chart: Interview Domain Competencies -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fa-solid fa-spider text-purple"></i> Multimodal Competency Radar</h3>
+                </div>
+                <div class="chart-body">
+                    <canvas id="competencyRadarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Bar Chart: Skill Strength Comparison -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fa-solid fa-chart-column text-blue"></i> Technical Domain Proficiency</h3>
+                </div>
+                <div class="chart-body">
+                    <canvas id="proficiencyBarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Pie Chart: Skill Distribution -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fa-solid fa-chart-pie text-emerald"></i> Evaluation Breakdown Distribution</h3>
+                </div>
+                <div class="chart-body">
+                    <canvas id="distributionPieChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Achievements Badges Section -->
+        <div class="achievements-section mt-4">
+            <h2><i class="fa-solid fa-trophy text-amber"></i> Unlocked Achievements & Badges</h2>
+            <div class="achievements-grid">
+                {% for ach in achievements %}
+                    <div class="achievement-card">
+                        <div class="ach-icon bg-amber">
+                            <i class="fa-solid {{ ach.badge_icon }}"></i>
+                        </div>
+                        <div class="ach-info">
+                            <h4>{{ ach.badge_title }}</h4>
+                            <p>{{ ach.description }}</p>
+                            <span class="ach-date">Unlocked: {{ ach.unlocked_at.strftime('%b %d, %Y') }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recent Interview History Table -->
+        <div class="history-table-card mt-4">
+            <h2><i class="fa-solid fa-clock-rotate-left text-primary"></i> Interview Session History</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Mode</th>
+                            <th>Category / Company</th>
+                            <th>Difficulty</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                            <th>Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in interviews %}
+                            <tr>
+                                <td>#{{ item.id }}</td>
+                                <td><span class="badge badge-primary">{{ item.interview_type.title() }}</span></td>
+                                <td>{{ item.company_name or item.category or 'General' }}</td>
+                                <td>{{ item.difficulty.title() }}</td>
+                                <td>
+                                    <strong style="color: {% if item.score >= 80 %}#10b981{% elif item.score >= 60 %}#f59e0b{% else %}#ef4444{% endif %};">
+                                        {{ item.score }}/100
+                                    </strong>
+                                </td>
+                                <td>{{ item.started_at.strftime('%b %d, %Y') }}</td>
+                                <td>
+                                    <a href="{{ url_for('interview.result', interview_id=item.id) }}" class="btn btn-sm btn-outline">
+                                        View Results
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">No interview sessions recorded yet.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Chart.js Library CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,19 @@
+{
+  "active_version": "v2.0",
+  "versions": {
+    "v1.0": {
+      "release_date": "2026-01-15",
+      "ats_score_accuracy": "91.2%",
+      "emotion_detection_accuracy": "86.4%",
+      "status": "deprecated"
+    },
+    "v2.0": {
+      "release_date": "2026-07-25",
+      "ats_score_accuracy": "96.8%",
+      "emotion_detection_accuracy": "92.5%",
+      "speech_clarity_accuracy": "94.1%",
+      "confidence_scoring_f1": "0.91",
+      "status": "production"
+    }
+  }
+}

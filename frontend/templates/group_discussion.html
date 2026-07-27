@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}AI Mock Group Discussion Platform - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="gd-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-users text-purple"></i> AI Mock Group Discussion Platform</h1>
+            <p>Simulate corporate group discussions with an AI Moderator and virtual candidate participants to measure leadership and communication impact.</p>
+        </div>
+
+        <div class="card mb-4">
+            <h3>Start New Mock Group Discussion</h3>
+            <form id="startGdForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <div class="form-group">
+                    <label for="gdTopic">Select or Type Discussion Topic:</label>
+                    <select id="gdTopic" class="form-control mb-2">
+                        <option value="Impact of Artificial Intelligence on Future Employment">Impact of Artificial Intelligence on Future Employment</option>
+                        <option value="Remote Work vs Office Work Culture">Remote Work vs Office Work Culture</option>
+                        <option value="Ethical Considerations in Machine Learning & Data Privacy">Ethical Considerations in Machine Learning & Data Privacy</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-play"></i> Begin AI Group Discussion</button>
+            </form>
+        </div>
+
+        <!-- Session Output Card -->
+        <div class="card" id="gdOutputCard">
+            <h3>Session Evaluation History</h3>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Topic</th>
+                            <th>Speaking Time</th>
+                            <th>Leadership Score</th>
+                            <th>Communication Score</th>
+                            <th>Overall Score</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in history %}
+                            <tr>
+                                <td><strong>{{ item.topic }}</strong></td>
+                                <td>{{ item.speaking_time_sec }}s</td>
+                                <td><span class="text-emerald">{{ item.leadership_score }}/100</span></td>
+                                <td><span class="text-primary">{{ item.communication_score }}/100</span></td>
+                                <td><span class="text-purple"><strong>{{ item.overall_score }}/100</strong></span></td>
+                                <td>{{ item.created_at.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">No group discussion sessions completed yet.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

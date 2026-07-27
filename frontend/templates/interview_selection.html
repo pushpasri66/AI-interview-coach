@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Select Mock Interview Mode - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="selection-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-headset text-primary"></i> Select Your AI Mock Interview Mode</h1>
+            <p>Choose an interview environment tailored to your target role, domain, or dream tech company.</p>
+        </div>
+
+        <div class="modes-grid">
+            
+            <!-- HR Interview Card -->
+            <div class="mode-card card-purple">
+                <div class="mode-icon-wrapper bg-purple">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <h3>HR & Behavioral Interview</h3>
+                <p>Master introduction, leadership stories, conflict resolution, and career goal questions using STAR technique.</p>
+                <div class="mode-footer">
+                    <a href="{{ url_for('interview.hr') }}" class="btn btn-primary btn-block">
+                        Configure HR Session <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Technical Interview Card -->
+            <div class="mode-card card-blue">
+                <div class="mode-icon-wrapper bg-blue">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <h3>Technical Domain Interview</h3>
+                <p>Practice domain-specific questions in Python, Java, AI/ML, Data Structures, DBMS, SQL, Networks, or OS.</p>
+                <div class="mode-footer">
+                    <a href="{{ url_for('interview.technical') }}" class="btn btn-primary btn-block">
+                        Configure Technical Session <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Coding Interview Card -->
+            <div class="mode-card card-emerald">
+                <div class="mode-icon-wrapper bg-emerald">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <h3>Live Coding Challenge</h3>
+                <p>Solve algorithm challenges in an online code editor with real-time automated code execution & test cases.</p>
+                <div class="mode-footer">
+                    <a href="{{ url_for('interview.coding') }}" class="btn btn-primary btn-block">
+                        Launch Coding Room <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Company Interview Card -->
+            <div class="mode-card card-amber">
+                <div class="mode-icon-wrapper bg-amber">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+                <h3>Target Company Interview</h3>
+                <p>Simulate authentic interview questions from Google, Microsoft, Amazon, TCS, Infosys, Wipro, or Accenture.</p>
+                <div class="mode-footer">
+                    <a href="{{ url_for('interview.company') }}" class="btn btn-primary btn-block">
+                        Select Company <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Resume-Based Interview Card -->
+            <div class="mode-card card-indigo">
+                <div class="mode-icon-wrapper bg-indigo">
+                    <i class="fa-solid fa-file-user"></i>
+                </div>
+                <h3>Resume-Based AI Interview</h3>
+                <p>Questions generated dynamically from your parsed resume skills, technical stack, and past projects.</p>
+                <div class="mode-footer">
+                    <form method="POST" action="{{ url_for('interview.generate') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <input type="hidden" name="interview_type" value="resume">
+                        <input type="hidden" name="difficulty" value="medium">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            Start Resume Interview <i class="fa-solid fa-play"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}

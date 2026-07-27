@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Resume - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="upload-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-file-arrow-up text-primary"></i> AI Resume Analyzer & ATS Scoring</h1>
+            <p>Upload your resume in PDF or DOCX format to receive an instant ATS score, parsed skill breakdown, and AI recommendations.</p>
+        </div>
+
+        <div class="upload-grid">
+            
+            <!-- Drag & Drop Upload Form -->
+            <div class="upload-card">
+                <form method="POST" action="{{ url_for('resume.upload') }}" enctype="multipart/form-data" id="resumeUploadForm">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                    <div class="drop-zone" id="dropZone">
+                        <div class="drop-zone-content">
+                            <div class="drop-icon">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                            </div>
+                            <h3>Drag & Drop your Resume here</h3>
+                            <p>or <span class="browse-link">browse files</span> from your computer</p>
+                            <span class="file-limits-badge"><i class="fa-solid fa-info-circle"></i> Accepts PDF & DOCX (Max 5 MB)</span>
+                        </div>
+                        <input type="file" name="resume_file" id="resumeFileInput" accept=".pdf, .docx" class="file-input-hidden" required>
+                    </div>
+
+                    <!-- Selected File Preview Container -->
+                    <div class="file-preview-card hidden" id="filePreviewCard">
+                        <div class="file-icon">
+                            <i class="fa-solid fa-file-pdf" id="fileTypeIcon"></i>
+                        </div>
+                        <div class="file-info">
+                            <h4 id="selectedFileName">resume.pdf</h4>
+                            <p id="selectedFileSize">1.2 MB</p>
+                        </div>
+                        <button type="button" class="btn-remove-file" id="btnRemoveFile" title="Remove file">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Upload Progress Simulation Bar -->
+                    <div class="upload-progress-container hidden" id="uploadProgressContainer">
+                        <div class="progress-info">
+                            <span id="progressStatusText">Extracting text & computing ATS score...</span>
+                            <span id="progressPercentage">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progressBarFill"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-block btn-lg" id="btnAnalyzeSubmit" disabled>
+                            <span class="btn-text"><i class="fa-solid fa-wand-magic-sparkles"></i> Analyze Resume & Compute ATS Score</span>
+                            <span class="btn-spinner hidden"><i class="fa-solid fa-circle-notch fa-spin"></i> Processing AI Analysis...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Resume Tips Sidebar Card -->
+            <div class="tips-card">
+                <h3><i class="fa-solid fa-lightbulb text-warning"></i> ATS Optimization Tips</h3>
+                <ul class="tips-list">
+                    <li>
+                        <i class="fa-solid fa-check-circle"></i>
+                        <div>
+                            <strong>Use Standard File Formats</strong>
+                            <p>Upload standard PDF or DOCX files without image scans for maximum text extraction accuracy.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-check-circle"></i>
+                        <div>
+                            <strong>Include Key Technical Skills</strong>
+                            <p>Mention technical tools, programming languages, and frameworks explicitly in a dedicated Skills section.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-check-circle"></i>
+                        <div>
+                            <strong>Quantify Your Achievements</strong>
+                            <p>Use metrics and percentages (e.g., "Increased server throughput by 35%") to boost impact scores.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-check-circle"></i>
+                        <div>
+                            <strong>Provide Complete Contact Info</strong>
+                            <p>Always include your Email, Phone Number, LinkedIn, and GitHub repository links.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}

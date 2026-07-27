@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Enterprise AI Analytics 2.0 - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="analytics-v2-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-chart-line text-emerald"></i> Enterprise AI Analytics & Market Intelligence 2.0</h1>
+            <p>Real-time hiring probability prediction, skill growth trajectories, and job market demand metrics.</p>
+        </div>
+
+        <!-- Predictive Scores Cards Grid -->
+        <div class="dashboard-coach-grid mb-4">
+            
+            <div class="coach-card card-purple text-center">
+                <h3>Career Readiness Index</h3>
+                <div class="readiness-gauge-val text-primary">89%</div>
+                <p class="text-secondary">High technical depth & behavioral communication mastery.</p>
+            </div>
+
+            <div class="coach-card card-emerald text-center">
+                <h3>Hiring Probability Prediction</h3>
+                <div class="readiness-gauge-val text-emerald">92%</div>
+                <p class="text-secondary">Top 5% candidate percentile for AI & Software Developer roles.</p>
+            </div>
+
+        </div>
+
+        <!-- Market Demand & Growth Cards -->
+        <div class="dashboard-grid">
+            
+            <div class="dashboard-card card-blue">
+                <div class="card-header">
+                    <h3>Market Demand Index</h3>
+                    <span class="badge badge-primary">High Demand</span>
+                </div>
+                <div class="card-body">
+                    <p>AI Engineer & Full-Stack Python demand increased by 34% across top tech firms this quarter.</p>
+                    <ul class="coach-tasks-list mt-2">
+                        <li><strong>Top In-Demand Stack:</strong> Python, PyTorch, Docker, Kubernetes, SQL</li>
+                        <li><strong>Avg Salary Range:</strong> $110,000 - $165,000 USD</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="dashboard-card card-rose">
+                <div class="card-header">
+                    <h3>Skill Growth Trajectory</h3>
+                    <span class="badge badge-outline">Accelerating</span>
+                </div>
+                <div class="card-body">
+                    <p>Your technical evaluation scores increased by +18% over the past 30 days of practice.</p>
+                    <ul class="coach-tasks-list mt-2">
+                        <li>System Architecture: 88/100</li>
+                        <li>Code Optimization: 92/100</li>
+                        <li>Verbal Communication: 86/100</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}

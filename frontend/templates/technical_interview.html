@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Technical Domain Interview - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="config-section">
+    <div class="section-container">
+        <div class="config-card">
+            <div class="config-header">
+                <i class="fa-solid fa-laptop-code config-icon text-blue"></i>
+                <h2>Technical Domain Mock Interview</h2>
+                <p>Choose your technical domain category and difficulty level.</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('interview.generate') }}" class="config-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="interview_type" value="technical">
+
+                <div class="form-group">
+                    <label for="category" class="form-label">Technical Domain Category</label>
+                    <select name="category" id="category" class="form-control" required>
+                        <option value="python">Python Development</option>
+                        <option value="java">Java & Enterprise Software</option>
+                        <option value="ai_ml">Artificial Intelligence & Machine Learning</option>
+                        <option value="dsa">Data Structures & Algorithms</option>
+                        <option value="dbms">Database Management Systems (DBMS)</option>
+                        <option value="sql">SQL & Relational Databases</option>
+                        <option value="cn">Computer Networks</option>
+                        <option value="os">Operating Systems</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="difficulty" class="form-label">Difficulty Level</label>
+                    <select name="difficulty" id="difficulty" class="form-control">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">
+                        <i class="fa-solid fa-play"></i> Start Technical Interview
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

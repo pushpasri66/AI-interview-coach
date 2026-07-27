@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Home - AI Interview Coach{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-container">
+        <div class="hero-badge">
+            <i class="fa-solid fa-sparkles"></i> Next-Gen AI Career Preparation
+        </div>
+        <h1 class="hero-title">
+            Master Every Interview with <span class="gradient-text">AI Precision</span>
+        </h1>
+        <p class="hero-description">
+            Elevate your interview skills with real-time AI feedback on speech, emotion, technical accuracy, and resume alignment.
+        </p>
+        <div class="hero-cta">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-primary btn-lg">
+                    Go to Dashboard <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            {% else %}
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+                    Get Started Free <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline btn-lg">
+                    Sign In
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Features Grid Section -->
+<section class="features-section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2>Comprehensive Interview Modules</h2>
+            <p>Everything you need to land your dream job at top technology companies</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon bg-purple">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <h3>HR Mock Interviews</h3>
+                <p>Practice behavioral questions with instant feedback on confidence, clarity, and communication style.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon bg-blue">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <h3>Technical Interviews</h3>
+                <p>Simulate deep-dive system design and technical architecture discussions tailored to target roles.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon bg-emerald">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <h3>Coding Challenges</h3>
+                <p>Solve interactive coding problems with real-time automated code evaluation and complexity analysis.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon bg-amber">
+                    <i class="fa-solid fa-file-invoice"></i>
+                </div>
+                <h3>ATS Resume Analyzer</h3>
+                <p>Upload your resume to check ATS compatibility scores, skill gaps, and custom job recommendations.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

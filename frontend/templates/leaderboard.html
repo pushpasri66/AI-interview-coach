@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Candidate Leaderboard & Gamification - AI Interview Coach{% endblock %}
+
+{% block content %}
+<section class="leaderboard-section">
+    <div class="section-container">
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-trophy text-amber"></i> Candidate Gamification & Leaderboard</h1>
+            <p>Earn XP points, unlock achievement badges, maintain practice streaks, and climb the platform rankings.</p>
+        </div>
+
+        <!-- User Stats Header -->
+        <div class="user-game-banner mb-4">
+            <div class="banner-stat">
+                <span class="stat-label">Your Platform Rank</span>
+                <strong class="stat-val text-amber">Rank #{{ user_rank }}</strong>
+            </div>
+            <div class="banner-stat">
+                <span class="stat-label">Level</span>
+                <strong class="stat-val text-primary">Level {{ user_game.level }}</strong>
+            </div>
+            <div class="banner-stat">
+                <span class="stat-label">Total XP Points</span>
+                <strong class="stat-val text-emerald">{{ user_game.points }} XP</strong>
+            </div>
+            <div class="banner-stat">
+                <span class="stat-label">Active Practice Streak</span>
+                <strong class="stat-val text-rose"><i class="fa-solid fa-fire"></i> {{ user_game.streak }} Days</strong>
+            </div>
+        </div>
+
+        <!-- Rankings Table Card -->
+        <div class="leaderboard-table-card">
+            <h2>Top Candidate Rankings</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Candidate Name</th>
+                            <th>Level</th>
+                            <th>XP Points</th>
+                            <th>Streak</th>
+                            <th>Unlocked Badges</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in leaderboard %}
+                            <tr style="{% if row.user_id == current_user.id %}background: rgba(99, 102, 241, 0.15); font-weight: 700;{% endif %}">
+                                <td>
+                                    {% if row.rank == 1 %}
+                                        <span class="rank-badge rank-1"><i class="fa-solid fa-crown text-amber"></i> 1</span>
+                                    {% elif row.rank == 2 %}
+                                        <span class="rank-badge rank-2"><i class="fa-solid fa-medal text-secondary"></i> 2</span>
+                                    {% elif row.rank == 3 %}
+                                        <span class="rank-badge rank-3"><i class="fa-solid fa-award text-warning"></i> 3</span>
+                                    {% else %}
+                                        #{{ row.rank }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ row.fullname }} {% if row.user_id == current_user.id %}<span class="badge badge-primary">You</span>{% endif %}</td>
+                                <td>Level {{ row.level }}</td>
+                                <td><strong class="text-emerald">{{ row.points }} XP</strong></td>
+                                <td><span class="text-rose"><i class="fa-solid fa-fire"></i> {{ row.streak }}d</span></td>
+                                <td>
+                                    <div class="tag-cloud">
+                                        {% for b in row.badges %}
+                                            <span class="tag tag-primary">{{ b }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">No candidate rankings available.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
