@@ -1,12 +1,13 @@
+ HEAD
 # 🚀 AI Interview Coach - Complete AI Career Ecosystem & Enterprise Intelligence Platform
 
 **AI Interview Coach** is a full-stack, enterprise-grade AI career development and interview intelligence platform used by students, software professionals, recruiters, and corporate hiring teams.
 
----
+
 
 ## ✨ System Architecture & Feature Ecosystem (Phases 1 - 8)
 
-```
+
 AI Interview Coach Architecture
 
 ├── 1️⃣ Core Infrastructure & Auth (Phase 1)
@@ -41,13 +42,12 @@ AI Interview Coach Architecture
     ├── AI Coding Interview Platform 2.0 (`AI/code_review/`)
     ├── Multilingual Voice AI Assistant (`AI/voice_assistant/`)
     └── Blockchain Certificate Verification (`backend/services/certificate.py`)
-```
 
----
+
+
 
 ## 🛠️ Installation & Quickstart
-
-```bash
+bash
 # 1. Clone Repository & Activate Virtual Environment
 git clone https://github.com/your-org/AI-Interview-Coach.git
 cd AI-Interview-Coach
@@ -59,28 +59,31 @@ pip install -r requirements.txt
 
 # 3. Launch Development Server
 python run.py
-```
+
 Open your browser at `http://127.0.0.1:5000`.
 
----
+
 
 ## 🐳 Docker Production Deployment
 
-```bash
+bash
 docker-compose -f deployment/docker-compose.yml up -d --build
-```
+
 Access the platform via Nginx reverse proxy at `http://localhost`.
 
----
 
 ## 🧪 Running Complete Automated Test Suite (Phases 1 - 8)
 
 Run full test suite discovery across all test modules:
-```bash
+bash
 python -m unittest discover tests
-```
 
----
+
+
 
 ## 📄 License & Author
 © 2026 AI Interview Coach Team. All Rights Reserved.
+
+# AI-interview-coach
+**AI Interview Coach** is a full-stack AI-powered career development platform built with Python and Flask. It features AI mock interviews, ATS resume analysis, resume builder, coding interviews, career mentoring, analytics dashboard, recruiter portal, voice assistant, and secure authentication to help users prepare for jobs.
+6a954aa84a756377e9e9338c4bac54141480465f
