@@ -83,3 +83,34 @@ def generate_roadmap():
     rec_svc = RecommendationService()
     plan = rec_svc.create_learning_plan(current_user.id, target_role=target_role)
     return jsonify({"success": True, "plan": plan})
+
+
+@career_bp.route("/digital-twin", methods=["GET"])
+@login_required
+def digital_twin_json():
+    """Returns candidate's Career Digital Twin structured data."""
+    from AI.digital_twin.digital_twin_engine import DigitalTwinEngine
+    engine = DigitalTwinEngine()
+    twin_data = engine.get_digital_twin_state(user_id=current_user.id, auto_sync=True)
+    return jsonify({
+        "success": True,
+        "candidate": {
+            "id": current_user.id,
+            "fullname": current_user.fullname,
+            "email": current_user.email
+        },
+        "digital_twin": twin_data
+    })
+
+
+@career_bp.route("/intelligence", methods=["GET"])
+@career_bp.route("/career-intelligence", methods=["GET"])
+@login_required
+def career_intelligence():
+    """Renders Advanced AI Career Intelligence Dashboard."""
+    from AI.digital_twin.digital_twin_engine import DigitalTwinEngine
+    engine = DigitalTwinEngine()
+    twin_data = engine.get_digital_twin_state(user_id=current_user.id, auto_sync=True)
+    return render_template("career_intelligence.html", twin_data=twin_data)
+
+

@@ -1,0 +1,518 @@
+{% extends "base.html" %}
+
+{% block title %}AI Career Intelligence Dashboard - AI Interview Coach{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    :root {
+        --glass-bg: rgba(15, 23, 42, 0.75);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --accent-glow: rgba(99, 102, 241, 0.15);
+    }
+    .intel-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+    }
+    .intel-header {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+    .intel-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.85rem;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: rgba(99, 102, 241, 0.15);
+        color: #818cf8;
+        border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+    .intel-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1.5rem;
+    }
+    .col-12 { grid-column: span 12; }
+    .col-8 { grid-column: span 8; }
+    .col-6 { grid-column: span 6; }
+    .col-4 { grid-column: span 4; }
+    
+    @media (max-width: 1024px) {
+        .col-8, .col-6, .col-4 { grid-column: span 12; }
+    }
+
+    .intel-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .intel-card:hover {
+        border-color: rgba(99, 102, 241, 0.4);
+    }
+    .card-title-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--glass-border);
+    }
+    .card-title-bar h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #f8fafc;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .readiness-ring {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, #0f172a 79%, transparent 80% 100%),
+                    conic-gradient(#6366f1 calc(var(--score) * 1%), #334155 0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        position: relative;
+    }
+    .readiness-val {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #f8fafc;
+    }
+    .role-path-card {
+        background: rgba(30, 41, 59, 0.6);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .role-match-badge {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #10b981;
+    }
+    .task-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.85rem 1rem;
+        background: rgba(30, 41, 59, 0.5);
+        border: 1px solid var(--glass-border);
+        border-radius: 10px;
+        margin-bottom: 0.6rem;
+        transition: background 0.2s ease;
+    }
+    .task-item.completed {
+        opacity: 0.6;
+        text-decoration: line-through;
+    }
+    .sim-input-group {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    .sim-input {
+        flex: 1;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid var(--glass-border);
+        color: #f8fafc;
+        padding: 0.65rem 1rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+    }
+    .q-pred-item {
+        padding: 1rem;
+        background: rgba(30, 41, 59, 0.5);
+        border-radius: 10px;
+        border-left: 4px solid #6366f1;
+        margin-bottom: 0.75rem;
+    }
+    .q-prob {
+        font-weight: 700;
+        color: #10b981;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="intel-container">
+
+    <!-- Header Banner -->
+    <div class="intel-header">
+        <div>
+            <span class="intel-badge"><i class="fa-solid fa-brain"></i> Phase 9: Autonomous Career Intelligence</span>
+            <h1 style="color: #f8fafc; margin-top: 0.5rem; font-size: 1.85rem;">Advanced AI Career Intelligence Dashboard</h1>
+            <p style="color: #94a3b8; margin-top: 0.25rem;">Real-time Digital Twin synchronization, predictive pathing, future skill forecasts, and AI career simulation.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('interview.select') }}" class="btn btn-primary">
+                <i class="fa-solid fa-headset"></i> Launch Mock Interview
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="intel-grid">
+
+        <!-- 1. AI Career Digital Twin & Readiness Score -->
+        <div class="intel-card col-4">
+            <div class="card-title-bar">
+                <h3><i class="fa-solid fa-dna text-primary"></i> Digital Twin State</h3>
+                <span class="badge badge-primary">Active Twin</span>
+            </div>
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div class="readiness-ring" style="--score: 87;" id="twinScoreRing">
+                    <span class="readiness-val" id="twinScoreVal">87%</span>
+                </div>
+                <h4 style="color: #f8fafc; margin-top: 0.75rem;" id="twinTargetRole">AI Engineer</h4>
+                <p style="color: #94a3b8; font-size: 0.85rem;">Career Readiness Index</p>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <div style="background: rgba(30, 41, 59, 0.6); padding: 0.75rem; border-radius: 8px; text-align: center;">
+                    <span style="font-size: 0.75rem; color: #94a3b8;">Technical Strength</span>
+                    <div style="font-weight: 700; color: #818cf8; font-size: 1.1rem;" id="techStrength">88/100</div>
+                </div>
+                <div style="background: rgba(30, 41, 59, 0.6); padding: 0.75rem; border-radius: 8px; text-align: center;">
+                    <span style="font-size: 0.75rem; color: #94a3b8;">Communication</span>
+                    <div style="font-weight: 700; color: #34d399; font-size: 1.1rem;" id="commStrength">84/100</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Skill Growth & Readiness Trajectory Chart -->
+        <div class="intel-card col-8">
+            <div class="card-title-bar">
+                <h3><i class="fa-solid fa-chart-line text-indigo"></i> Skill Growth & Readiness Trajectory</h3>
+                <span style="color: #94a3b8; font-size: 0.85rem;">Simulated 4-Month Forecast</span>
+            </div>
+            <div style="height: 220px;">
+                <canvas id="readinessChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 3. Top Career Paths (9-Role Catalog Comparison) -->
+        <div class="intel-card col-6">
+            <div class="card-title-bar">
+                <h3><i class="fa-solid fa-signs-post text-emerald"></i> Predictive Career Paths</h3>
+                <span class="badge badge-outline">9 Roles Evaluated</span>
+            </div>
+            <div style="height: 180px; margin-bottom: 1rem;">
+                <canvas id="careerPathsChart"></canvas>
+            </div>
+            <div id="rolePathsList">
+                <div class="role-path-card">
+                    <div>
+                        <strong style="color: #f8fafc;">AI Engineer</strong>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">Growth: Exponential • Prep: 6-8 Weeks</div>
+                    </div>
+                    <span class="role-match-badge">92%</span>
+                </div>
+                <div class="role-path-card">
+                    <div>
+                        <strong style="color: #f8fafc;">Machine Learning Engineer</strong>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">Growth: Very High • Prep: 8-10 Weeks</div>
+                    </div>
+                    <span class="role-match-badge">88%</span>
+                </div>
+                <div class="role-path-card">
+                    <div>
+                        <strong style="color: #f8fafc;">Full Stack Developer</strong>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">Growth: High • Prep: 4-6 Weeks</div>
+                    </div>
+                    <span class="role-match-badge">85%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Future Skill Demand (1, 2, 3 Years) -->
+        <div class="intel-card col-6">
+            <div class="card-title-bar">
+                <h3><i class="fa-solid fa-bullseye text-amber"></i> Future Skill Demand Intelligence</h3>
+                <span class="badge badge-outline">1-3 Year Horizon</span>
+            </div>
+            <div style="height: 200px; margin-bottom: 1rem;">
+                <canvas id="futureSkillsChart"></canvas>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; text-align: center;">
+                <div style="background: rgba(30,41,59,0.5); padding: 0.5rem; border-radius: 8px;">
+                    <div style="color: #10b981; font-weight: 700;">+33.8%</div>
+                    <span style="font-size: 0.75rem; color: #94a3b8;">Generative AI / LLMs</span>
+                </div>
+                <div style="background: rgba(30,41,59,0.5); padding: 0.5rem; border-radius: 8px;">
+                    <div style="color: #3b82f6; font-weight: 700;">+42.6%</div>
+                    <span style="font-size: 0.75rem; color: #94a3b8;">Agentic Workflows</span>
+                </div>
+                <div style="background: rgba(30,41,59,0.5); padding: 0.5rem; border-radius: 8px;">
+                    <div style="color: #f59e0b; font-weight: 700;">+28.4%</div>
+                    <span style="font-size: 0.75rem; color: #94a3b8;">MLOps & K8s</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Daily Career Planner & Digital Twin Sync -->
+        <div class="intel-card col-6">
+            <div class="card-title-bar">
+                <h3><i class="fa-solid fa-list-check text-blue"></i> Personalized Daily Career Plan</h3>
+                <span class="badge badge-primary" id="dailyPlanProgress">0% Completed</span>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1rem;">Completing tasks immediately recalibrates your AI Career Digital Twin.</p>
+            <div id="dailyTasksContainer">
+                <!-- Populated via API -->
+                <div class="task-item">
+                    <div>
+                        <strong style="color: #f8fafc;">Learn Docker Containerization Fundamentals</strong>
+                        <div style="font-size: 0.75rem; color: #94a3b8;">Skill Building • 45 Mins • +Docker</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="completeTask('t1')"><i class="fa-solid fa-check"></i> Complete</button>
+                </div>
+                <div class="task-item">
+                    <div>
+                        <strong style="color: #f8fafc;">Solve 2 Python Algorithmic Problems</strong>
+                        <div style="font-size: 0.75rem; color: #94a3b8;">Coding Practice • 30 Mins • +Problem Solving</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="completeTask('t2')"><i class="fa-solid fa-check"></i> Complete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. AI Career Simulation Engine -->
+        <div class="intel-card col-6">
+            <div class="card-title-bar">
+                <h3><i class="fa-solid fa-flask-vial text-primary"></i> AI Career Simulation Engine</h3>
+                <span class="badge badge-outline">What-If Modeling</span>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.75rem;">Simulate learning a skill, earning a certification, or building a project to project readiness & salary impact.</p>
+            <div class="sim-input-group">
+                <input type="text" class="sim-input" id="simInput" placeholder="e.g. Learn AWS + Docker or Build Microservice">
+                <button class="btn btn-primary btn-sm" onclick="runSimulation()"><i class="fa-solid fa-play"></i> Simulate</button>
+            </div>
+            <div id="simResultBox" style="background: rgba(30,41,59,0.5); padding: 1rem; border-radius: 10px; border: 1px solid var(--glass-border);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: #94a3b8;">Readiness Impact:</span>
+                    <strong style="color: #10b981;" id="simReadinessDelta">+8% (78% &rarr; 86%)</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: #94a3b8;">Salary Potential:</span>
+                    <strong style="color: #38bdf8;" id="simSalaryGrowth">+12% Growth</strong>
+                </div>
+                <div style="font-size: 0.85rem; color: #cbd5e1; margin-top: 0.5rem;" id="simNextStep">
+                    <i class="fa-solid fa-arrow-right text-primary"></i> Recommended Next Step: Build a cloud deployment project.
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Interview Question Predictions (7 Categories) -->
+        <div class="intel-card col-6">
+            <div class="card-title-bar">
+                <h3><i class="fa-solid fa-comments-question-check text-indigo"></i> Predicted Interview Questions</h3>
+                <span class="badge badge-outline">7 Categories</span>
+            </div>
+            <div id="predictedQuestionsContainer">
+                <div class="q-pred-item">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                        <span class="badge badge-primary">Project</span>
+                        <span class="q-prob">92% Probability</span>
+                    </div>
+                    <p style="color: #f8fafc; font-weight: 600; margin: 0.25rem 0;">"Explain the CNN architecture used in your image classification project and how you addressed overfitting."</p>
+                    <span style="font-size: 0.75rem; color: #94a3b8;">Reason: Candidate highlights ML/Vision project in portfolio.</span>
+                </div>
+                <div class="q-pred-item">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                        <span class="badge badge-outline">System Design</span>
+                        <span class="q-prob">88% Probability</span>
+                    </div>
+                    <p style="color: #f8fafc; font-weight: 600; margin: 0.25rem 0;">"Design a high-throughput asynchronous task queue with Redis and Python."</p>
+                    <span style="font-size: 0.75rem; color: #94a3b8;">Reason: Backend engineering core benchmark.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. GitHub AI Profile Analysis & Explainable AI -->
+        <div class="intel-card col-6">
+            <div class="card-title-bar">
+                <h3><i class="fa-brands fa-github text-emerald"></i> GitHub AI Profile Intelligence</h3>
+                <span class="badge badge-primary" id="githubScoreBadge">Score: 84/100</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+                <div style="background: rgba(30,41,59,0.5); padding: 0.75rem; border-radius: 8px;">
+                    <span style="font-size: 0.75rem; color: #94a3b8;">Coding Activity</span>
+                    <div style="font-weight: 700; color: #10b981;">Consistent & Active</div>
+                </div>
+                <div style="background: rgba(30,41,59,0.5); padding: 0.75rem; border-radius: 8px;">
+                    <span style="font-size: 0.75rem; color: #94a3b8;">Repo Quality</span>
+                    <div style="font-weight: 700; color: #818cf8;">82/100</div>
+                </div>
+            </div>
+            <div style="background: rgba(30,41,59,0.4); padding: 0.75rem; border-radius: 8px; border-left: 3px solid #10b981;">
+                <strong style="color: #f8fafc; font-size: 0.85rem;"><i class="fa-solid fa-circle-check text-emerald"></i> Explainable AI Recommendation:</strong>
+                <p style="color: #94a3b8; font-size: 0.8rem; margin: 0.25rem 0 0 0;">
+                    Your profile demonstrates strong Python and modular architecture. Adding Docker setup instructions to top repositories will boost recruiter technical screening pass rates by +12%.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Initialize Charts on Page Load
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. Readiness Trajectory Chart
+        const ctxReadiness = document.getElementById("readinessChart").getContext("2d");
+        new Chart(ctxReadiness, {
+            type: "line",
+            data: {
+                labels: ["Current Baseline", "Month 1 (Skills)", "Month 2 (Projects)", "Month 3 (Certifications)", "Month 4 (Target)"],
+                datasets: [{
+                    label: "Career Readiness (%)",
+                    data: [78, 83, 89, 94, 98],
+                    borderColor: "#6366f1",
+                    backgroundColor: "rgba(99, 102, 241, 0.15)",
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: "#818cf8"
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { min: 60, max: 100, grid: { color: "rgba(255,255,255,0.05)" } },
+                    x: { grid: { color: "rgba(255,255,255,0.05)" } }
+                }
+            }
+        });
+
+        // 2. Career Paths Bar Chart
+        const ctxPaths = document.getElementById("careerPathsChart").getContext("2d");
+        new Chart(ctxPaths, {
+            type: "bar",
+            data: {
+                labels: ["AI Eng", "ML Eng", "Full Stack", "Data Sci", "DevOps", "Cloud Eng"],
+                datasets: [{
+                    label: "Match %",
+                    data: [92, 88, 85, 81, 79, 76],
+                    backgroundColor: ["#6366f1", "#818cf8", "#10b981", "#3b82f6", "#f59e0b", "#ec4899"],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { min: 50, max: 100, grid: { color: "rgba(255,255,255,0.05)" } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 3. Future Skills Demand Chart
+        const ctxSkills = document.getElementById("futureSkillsChart").getContext("2d");
+        new Chart(ctxSkills, {
+            type: "line",
+            data: {
+                labels: ["Today", "1 Year", "2 Years", "3 Years"],
+                datasets: [
+                    {
+                        label: "Generative AI",
+                        data: [75, 88, 95, 98],
+                        borderColor: "#10b981",
+                        tension: 0.3
+                    },
+                    {
+                        label: "Agentic AI",
+                        data: [50, 78, 92, 99],
+                        borderColor: "#3b82f6",
+                        tension: 0.3
+                    },
+                    {
+                        label: "MLOps / Cloud",
+                        data: [65, 80, 89, 94],
+                        borderColor: "#f59e0b",
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: "#94a3b8" } } },
+                scales: {
+                    y: { min: 40, max: 100, grid: { color: "rgba(255,255,255,0.05)" } },
+                    x: { grid: { color: "rgba(255,255,255,0.05)" } }
+                }
+            }
+        });
+    });
+
+    // Interactive Daily Task Completion
+    async function completeTask(taskId) {
+        try {
+            const resp = await fetch("/api/career/daily-plan/complete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ task_id: taskId, completed: true })
+            });
+            if (resp.ok) {
+                const data = await resp.json();
+                document.getElementById("dailyPlanProgress").innerText = data.result.daily_plan.metrics.completion_rate_pct + "% Completed";
+                alert("Task completed! AI Career Digital Twin synchronized.");
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    // Interactive Career Simulation
+    async function runSimulation() {
+        const scenario = document.getElementById("simInput").value.trim();
+        if (!scenario) {
+            alert("Please enter a simulation scenario.");
+            return;
+        }
+
+        try {
+            const resp = await fetch("/api/career/simulate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ scenario_title: scenario })
+            });
+            if (resp.ok) {
+                const data = await resp.json();
+                const sim = data.simulation;
+                document.getElementById("simReadinessDelta").innerText = `+${sim.impact_comparison.career_readiness.delta}% (${sim.impact_comparison.career_readiness.current}% -> ${sim.impact_comparison.career_readiness.predicted}%)`;
+                document.getElementById("simSalaryGrowth").innerText = sim.impact_comparison.salary_potential.growth_display + " Potential Growth";
+                document.getElementById("simNextStep").innerHTML = `<i class="fa-solid fa-arrow-right text-primary"></i> Recommended Next Step: ${sim.recommended_next_step}`;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+</script>
+{% endblock %}

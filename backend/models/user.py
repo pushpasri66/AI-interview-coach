@@ -22,6 +22,7 @@ class User(UserMixin, db.Model):
     # Relationships
     resumes = db.relationship("Resume", backref="user", lazy=True, cascade="all, delete-orphan")
     interviews = db.relationship("Interview", backref="user", lazy=True, cascade="all, delete-orphan")
+    digital_twin = db.relationship("DigitalTwin", backref="user", uselist=False, lazy=True, cascade="all, delete-orphan")
 
     def set_password(self, password: str) -> None:
         """Hashes raw password using scrypt/pbkdf2 via Werkzeug security."""

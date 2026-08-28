@@ -24,6 +24,14 @@ from backend.models.linkedin import LinkedInAnalysis
 from backend.models.certificate import Certificate
 from backend.models.recruiter import Recruiter
 from backend.models.group_discussion import GroupDiscussion
+from backend.models.digital_twin import DigitalTwin
+from backend.models.career_prediction import CareerPathPrediction
+from backend.models.future_skill import FutureSkillDemand
+from backend.models.question_prediction import InterviewPrediction
+from backend.models.github_profile import GitHubAnalysis
+from backend.models.job_application import JobApplicationPackage
+from backend.models.daily_task import DailyPlan
+from backend.models.career_simulation import CareerSimulation
 from backend.utils.logging_config import setup_advanced_logging
 from backend.utils.errors import register_error_handlers
 
@@ -43,9 +51,10 @@ def create_app(config_name=None):
     app.config.from_object(config_by_name.get(config_name, Config))
 
     # Ensure required folders exist
-    for folder in ["database", "uploads/resumes", "uploads/interview_audio", "uploads/interview_video", "uploads/recordings", "reports/interview_reports", "logs"]:
+    for folder in ["database", "uploads/resumes", "uploads/interview_audio", "uploads/interview_video", "uploads/recordings", "reports/interview_reports", "reports/career_reports", "logs"]:
         path = os.path.join(app.root_path, "..", folder)
         os.makedirs(path, exist_ok=True)
+
 
     # Initialize extensions
     db.init_app(app)
@@ -89,6 +98,7 @@ def create_app(config_name=None):
     from backend.routes.group_discussion import gd_bp
     from backend.routes.recruiter import recruiter_bp
     from backend.routes.mobile_v2 import mobile_v2_bp
+    from backend.routes.api import api_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
@@ -104,14 +114,18 @@ def create_app(config_name=None):
     app.register_blueprint(gd_bp)
     app.register_blueprint(recruiter_bp)
     app.register_blueprint(mobile_v2_bp)
+    app.register_blueprint(api_bp)
 
-    # Exempt mobile API endpoints from web CSRF check
+    # Exempt mobile & general REST API endpoints from web CSRF check
     CSRFProtect(app).exempt(mobile_api_bp)
     CSRFProtect(app).exempt(mobile_v2_bp)
+    CSRFProtect(app).exempt(api_bp)
 
     # Apply Rate Limiting to Sensitive Routes
     limiter.limit("10 per minute")(auth_bp)
     limiter.limit("30 per minute")(interview_bp)
+    limiter.limit("60 per minute")(api_bp)
+
 
     # Auto-create tables within application context
     with app.app_context():

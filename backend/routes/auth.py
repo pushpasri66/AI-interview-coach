@@ -9,6 +9,7 @@ auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.route("/register", methods=["GET", "POST"])
+@auth_bp.route("/auth/register", methods=["GET", "POST"])
 def register():
     """Renders registration page and handles new user creation."""
     if current_user.is_authenticated:
@@ -32,18 +33,19 @@ def register():
             db.session.commit()
 
             current_app.logger.info(f"New user registered successfully: {email}")
-            flash("Account created successfully! Please login to continue.", "success")
+            flash("Account created successfully! Please log in.", "success")
             return redirect(url_for("auth.login"))
 
         except Exception as e:
             db.session.rollback()
-            current_app.logger.error(f"Error registering user {email}: {str(e)}")
-            flash("An error occurred while creating your account. Please try again.", "danger")
+            current_app.logger.error(f"Error registering user: {str(e)}")
+            flash("An error occurred during registration. Please try again.", "danger")
 
     return render_template("register.html", form=form)
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
+@auth_bp.route("/auth/login", methods=["GET", "POST"])
 def login():
     """Renders login page and authenticates existing users."""
     if current_user.is_authenticated:

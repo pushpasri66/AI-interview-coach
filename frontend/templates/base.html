@@ -36,6 +36,7 @@
             <ul class="nav-links" id="navLinks">
                 {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('dashboard.dashboard') }}" class="nav-item {% if request.endpoint == 'dashboard.dashboard' %}active{% endif %}"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('career.career_intelligence') }}" class="nav-item {% if request.endpoint == 'career.career_intelligence' %}active{% endif %}"><i class="fa-solid fa-brain"></i> Career Intelligence</a></li>
                     <li><a href="{{ url_for('profile.profile') }}" class="nav-item {% if request.endpoint == 'profile.profile' %}active{% endif %}"><i class="fa-solid fa-user"></i> Profile</a></li>
                     <li><a href="{{ url_for('auth.logout') }}" class="nav-item btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
                 {% else %}

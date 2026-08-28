@@ -271,6 +271,15 @@ def complete(interview_id: int):
         current_app.logger.error(f"Error generating PDF report for Interview #{interview_id}: {str(e)}")
 
     current_app.logger.info(f"Interview #{interview_id} completed. Final Score: {avg_score}")
+
+    # Auto-synchronize Digital Twin
+    try:
+        from AI.digital_twin.digital_twin_engine import DigitalTwinEngine
+        twin_engine = DigitalTwinEngine()
+        twin_engine.sync_user_twin(current_user.id, trigger_event="interview_completion")
+    except Exception as twin_err:
+        current_app.logger.error(f"Error syncing Digital Twin for User #{current_user.id}: {str(twin_err)}")
+
     flash("Interview completed successfully!", "success")
 
     return redirect(url_for("interview.result", interview_id=interview_obj.id))

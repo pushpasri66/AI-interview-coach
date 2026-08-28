@@ -84,15 +84,31 @@
             </div>
         </div>
 
-        <!-- Dashboard Feature Cards Grid (PHASE 1 - PHASE 8 MODULES) -->
+        <!-- Dashboard Feature Cards Grid (PHASE 1 - PHASE 9 MODULES) -->
         <div class="dashboard-grid mt-4">
             
+            <!-- AI Career Intelligence Dashboard Card (PHASE 9) -->
+            <div class="dashboard-card card-purple" style="border: 1px solid rgba(99, 102, 241, 0.4); background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);">
+                <div class="card-header">
+                    <div class="card-icon bg-icon-purple"><i class="fa-solid fa-brain"></i></div>
+                    <span class="card-status status-ready" style="background: rgba(99, 102, 241, 0.2); color: #818cf8;">Phase 9 Active</span>
+                </div>
+                <div class="card-body">
+                    <h3>AI Career Intelligence</h3>
+                    <p>Digital Twin synchronization, 9-role predictive pathing, future skill forecasts, and career simulation.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('career.career_intelligence') }}" class="btn btn-primary btn-card">Explore Career Intelligence <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
             <!-- HR Interview Card -->
             <div class="dashboard-card card-purple">
                 <div class="card-header">
                     <div class="card-icon bg-icon-purple"><i class="fa-solid fa-comments"></i></div>
                     <span class="card-status status-ready">Active</span>
                 </div>
+
                 <div class="card-body">
                     <h3>HR & Behavioral Interview</h3>
                     <p>Practice behavioral, leadership, and STAR technique questions with real-time AI scoring.</p>
