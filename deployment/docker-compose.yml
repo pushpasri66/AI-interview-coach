@@ -9,9 +9,9 @@ services:
     restart: always
     environment:
       - FLASK_ENV=production
-      - DATABASE_URL=postgresql://postgres:postgres_password@db:5432/ai_interview_coach
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-ai_interview_coach}
       - REDIS_URL=redis://redis:6379/0
-      - SECRET_KEY=prod-secret-key-ai-interview-coach-2026-xyz!
+      - SECRET_KEY=${SECRET_KEY}
     volumes:
       - ../uploads:/app/uploads
       - ../reports:/app/reports
@@ -25,9 +25,9 @@ services:
     container_name: ai_coach_db
     restart: always
     environment:
-      - POSTGRES_DB=ai_interview_coach
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_DB=${POSTGRES_DB:-ai_interview_coach}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -12,7 +13,7 @@ load_dotenv(BASE_DIR / ".env")
 class Config:
     """Base application configuration."""
 
-    SECRET_KEY = os.getenv("SECRET_KEY", "prod-secret-key-ai-interview-coach-2026-xyz!")
+    SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-insecure-key-do-not-use-in-production")
     
     # SQLite default for development with POSIX path normalization
     DB_DIR = BASE_DIR / "database"
@@ -63,6 +64,27 @@ class ProductionConfig(Config):
     TESTING = False
     SESSION_COOKIE_SECURE = True
     REMOTE_ADDR_HEADER = "X-Forwarded-For"
+
+    def __init__(self):
+        super().__init__()
+        # Enforce required secrets at startup — fail fast rather than run insecurely
+        _secret = os.getenv("SECRET_KEY", "")
+        if not _secret or _secret == "dev-only-insecure-key-do-not-use-in-production":
+            print(
+                "[FATAL] SECRET_KEY environment variable is not set or is using the insecure default. "
+                "Set a strong random SECRET_KEY before deploying to production.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+        _db_url = os.getenv("DATABASE_URL", "")
+        if not _db_url or _db_url.startswith("sqlite"):
+            print(
+                "[FATAL] DATABASE_URL must be set to a PostgreSQL URI in production. "
+                "SQLite is not suitable for production deployments.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
 
 class TestingConfig(Config):
