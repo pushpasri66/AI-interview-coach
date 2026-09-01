@@ -59,7 +59,7 @@ def create_app(config_name=None):
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
-    CSRFProtect(app)
+    csrf = CSRFProtect(app)  # single instance — reused below for .exempt() calls
 
     # Initialize Limiter
     limiter = Limiter(
@@ -117,9 +117,11 @@ def create_app(config_name=None):
     app.register_blueprint(api_bp)
 
     # Exempt mobile & general REST API endpoints from web CSRF check
-    CSRFProtect(app).exempt(mobile_api_bp)
-    CSRFProtect(app).exempt(mobile_v2_bp)
-    CSRFProtect(app).exempt(api_bp)
+    # Use the SAME csrf instance — calling CSRFProtect(app) again re-registers
+    # the before_request handler and causes CSRF to run 4× per request.
+    csrf.exempt(mobile_api_bp)
+    csrf.exempt(mobile_v2_bp)
+    csrf.exempt(api_bp)
 
     # Apply Rate Limiting to Sensitive Routes
     limiter.limit("10 per minute")(auth_bp)
