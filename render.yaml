@@ -5,7 +5,6 @@ services:
   - type: web
     name: ai-interview-coach
     runtime: python
-    region: singapore        # closest to India; change to: ohio, oregon, frankfurt, etc.
     plan: free               # change to "starter" ($7/mo) for always-on
     buildCommand: "./build.sh"
     startCommand: "gunicorn -c deployment/gunicorn.conf.py app:app"
@@ -16,15 +15,15 @@ services:
       - key: PYTHON_VERSION
         value: "3.12"
       - key: SECRET_KEY
-        generateValue: true          # Render auto-generates a secure random value
+        generateValue: true
       - key: DATABASE_URL
         fromDatabase:
           name: ai-interview-coach-db
-          property: connectionString
+          property: externalConnectionString
       - key: WTF_CSRF_ENABLED
         value: "True"
       - key: AI_API_KEY
-        value: replace-with-your-ai-api-key   # update in Render dashboard
+        value: replace-with-your-ai-api-key
 
 databases:
   - name: ai-interview-coach-db
