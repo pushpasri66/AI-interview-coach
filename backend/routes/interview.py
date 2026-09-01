@@ -10,8 +10,21 @@ from backend.services.speech_service import SpeechService
 from backend.services.coding_service import CodingService
 from backend.services.interview_report_service import InterviewReportService
 
-from AI.models.question_generator import QuestionGenerator
-from AI.models.answer_evaluator import AnswerEvaluator
+try:
+    from AI.models.question_generator import QuestionGenerator
+except ImportError:
+    class QuestionGenerator:
+        def generate(self, interview_type="hr", count=5, **kwargs):
+            from backend.services.ai_service import AIService
+            return AIService.generate_questions(interview_type=interview_type, count=count)
+
+try:
+    from AI.models.answer_evaluator import AnswerEvaluator
+except ImportError:
+    class AnswerEvaluator:
+        def evaluate(self, question, answer):
+            from backend.services.ai_service import AIService
+            return AIService.score_answer(question, answer)
 
 interview_bp = Blueprint("interview", __name__, url_prefix="/interview")
 

@@ -11,12 +11,41 @@ from backend.models.ai_analysis import AIAnalysis, VoiceAnalysis, FaceAnalysis
 from backend.services.emotion_service import EmotionService
 from backend.services.speech_service import SpeechService
 
-from AI.models.confidence_score import ConfidenceScorer
-from AI.models.voice_analysis import VoiceAnalyzer
-from AI.models.emotion_detection import EmotionDetector
-from AI.models.facial_expression import FacialExpressionAnalyzer
-from AI.models.eye_contact import EyeContactDetector
-from AI.models.communication_score import CommunicationScorer
+try:
+    from AI.models.confidence_score import ConfidenceScorer
+except ImportError:
+    class ConfidenceScorer:
+        def score(self, audio_data): return {"confidence_score": 50, "error": True}
+
+try:
+    from AI.models.voice_analysis import VoiceAnalyzer
+except ImportError:
+    class VoiceAnalyzer:
+        def analyze(self, audio_path): return {"pitch": 0, "pace": 0, "error": True}
+
+try:
+    from AI.models.emotion_detection import EmotionDetector
+except ImportError:
+    class EmotionDetector:
+        def detect(self, frame): return {"emotion": "neutral", "confidence": 0, "error": True}
+
+try:
+    from AI.models.facial_expression import FacialExpressionAnalyzer
+except ImportError:
+    class FacialExpressionAnalyzer:
+        def analyze(self, frame): return {"expression": "neutral", "error": True}
+
+try:
+    from AI.models.eye_contact import EyeContactDetector
+except ImportError:
+    class EyeContactDetector:
+        def detect(self, frame): return {"eye_contact_score": 50, "error": True}
+
+try:
+    from AI.models.communication_score import CommunicationScorer
+except ImportError:
+    class CommunicationScorer:
+        def score(self, text): return {"communication_score": 50, "error": True}
 
 analysis_bp = Blueprint("analysis", __name__, url_prefix="/analysis")
 

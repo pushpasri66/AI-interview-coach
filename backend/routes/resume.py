@@ -11,9 +11,23 @@ from backend.services.resume_parser import ResumeParser
 from backend.services.ats_service import ATSService
 from backend.services.analytics_service import AnalyticsService
 
-from AI.models.ats_score import ATSScoreCalculator
-from AI.models.resume_analysis import ResumeAnalyzer
-from AI.models.recommendation import ResumeRecommender
+try:
+    from AI.models.ats_score import ATSScoreCalculator
+except ImportError:
+    class ATSScoreCalculator:
+        def calculate(self, resume_text, job_desc=""): return {"score": 0, "error": True}
+
+try:
+    from AI.models.resume_analysis import ResumeAnalyzer
+except ImportError:
+    class ResumeAnalyzer:
+        def analyze(self, text): return {"skills": [], "experience": [], "error": True}
+
+try:
+    from AI.models.recommendation import ResumeRecommender
+except ImportError:
+    class ResumeRecommender:
+        def recommend(self, resume_data): return []
 
 resume_bp = Blueprint("resume", __name__, url_prefix="/resume")
 

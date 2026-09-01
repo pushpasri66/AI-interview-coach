@@ -4,7 +4,12 @@ from typing import Optional, Tuple
 from flask import Blueprint, request, jsonify, current_app
 from flask_login import current_user
 from backend.models.user import User
-from AI.digital_twin.digital_twin_engine import DigitalTwinEngine
+try:
+    from AI.digital_twin.digital_twin_engine import DigitalTwinEngine
+except ImportError:
+    class DigitalTwinEngine:  # Stub — AI module not yet implemented
+        def get_digital_twin_state(self, user_id, auto_sync=False):
+            return {"career_readiness_index": 0, "error": "Digital twin AI module not configured."}
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 

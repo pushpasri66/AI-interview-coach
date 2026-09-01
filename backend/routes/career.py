@@ -5,7 +5,13 @@ from backend.database import db
 from backend.models.skill import Skill
 from backend.models.recommendation import CareerRecommendation
 from backend.services.recommendation_service import RecommendationService
-from AI.models.job_analyzer import JobAnalyzer
+try:
+    from AI.models.job_analyzer import JobAnalyzer
+except ImportError:
+    class JobAnalyzer:  # Stub — AI module not yet implemented
+        def analyze_job_description(self, job_text, skills):
+            return {"match_score": 0, "matched_keywords": [], "missing_keywords": [],
+                    "recommendation": "AI job analysis module is not yet configured.", "error": True}
 
 career_bp = Blueprint("career", __name__, url_prefix="/career")
 
