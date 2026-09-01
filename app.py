@@ -129,7 +129,13 @@ def create_app(config_name=None):
 
     # Auto-create tables within application context
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception as e:
+            app.logger.warning(
+                f"db.create_all() failed at startup (DB may not be ready yet): {e}. "
+                "Tables will be created on first successful connection."
+            )
 
     return app
 

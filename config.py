@@ -19,12 +19,21 @@ class Config:
     DB_DIR = BASE_DIR / "database"
     os.makedirs(DB_DIR, exist_ok=True)
     DEFAULT_DB_PATH = (DB_DIR / "interview.db").as_posix()
-    
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", f"sqlite:///{DEFAULT_DB_PATH}")
+
+    # Fix Render/Heroku DATABASE_URL: SQLAlchemy 2.x dropped the legacy 'postgres://' prefix.
+    # Must be 'postgresql://' — replace silently so the app starts correctly.
+    _raw_db_url = os.getenv("DATABASE_URL", f"sqlite:///{DEFAULT_DB_PATH}")
+    SQLALCHEMY_DATABASE_URI = (
+        _raw_db_url.replace("postgres://", "postgresql://", 1)
+        if _raw_db_url.startswith("postgres://")
+        else _raw_db_url
+    )
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
         "pool_pre_ping": True,
         "pool_recycle": 300,
+        "connect_args": {"connect_timeout": 10},  # Don't hang forever on DB startup
     }
 
     # Upload & Media Configuration

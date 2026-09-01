@@ -7,7 +7,8 @@ echo "==> Installing Python dependencies..."
 pip install --upgrade pip
 pip install -r requirements.txt
 
-echo "==> Running database migrations..."
-flask db upgrade || echo "No migrations to run (db may not exist yet — tables created on first start)."
+# NOTE: Do NOT run 'flask db upgrade' here.
+# Render's database hostname is only reachable at RUNTIME, not during the build phase.
+# Database tables are created automatically by db.create_all() on first app startup.
 
 echo "==> Build complete."
