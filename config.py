@@ -33,7 +33,8 @@ class Config:
     SQLALCHEMY_ENGINE_OPTIONS = {
         "pool_pre_ping": True,
         "pool_recycle": 300,
-        "connect_args": {"connect_timeout": 10},  # Don't hang forever on DB startup
+        # NOTE: connect_args NOT here — SQLite (used in tests) doesn't support connect_timeout.
+        # PostgreSQL-specific connect_args are set in ProductionConfig below.
     }
 
     # Upload & Media Configuration
@@ -73,6 +74,13 @@ class ProductionConfig(Config):
     TESTING = False
     SESSION_COOKIE_SECURE = True
     REMOTE_ADDR_HEADER = "X-Forwarded-For"
+
+    # PostgreSQL-specific: cap connection wait time so Gunicorn doesn't hang on cold start.
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+        "connect_args": {"connect_timeout": 10},
+    }
 
     def __init__(self):
         super().__init__()
